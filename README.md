@@ -1,5 +1,8 @@
 <p align="center">
-  <img src="docs/images/kasha.jpg" width="340" alt="Kasha: a puppy with a heap of porridge on its head, pouring a ladle of porridge with 안녕, 学, 好 and Б floating in it">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/kasha-dark.png">
+    <img src="docs/images/kasha.png" width="340" alt="Kasha: a puppy with a heap of porridge on its head, pouring a ladle of porridge with 안녕, 学, 好 and Б floating in it">
+  </picture>
 </p>
 
 <p align="center">

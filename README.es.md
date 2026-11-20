@@ -1,5 +1,8 @@
 <p align="center">
-  <img src="docs/images/kasha.jpg" width="340" alt="Kasha: un perrito con un montón de gachas en la cabeza que vierte un cucharón de gachas con 안녕, 学, 好 y Б flotando dentro">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/kasha-dark.png">
+    <img src="docs/images/kasha.png" width="340" alt="Kasha: un perrito con un montón de gachas en la cabeza que vierte un cucharón de gachas con 안녕, 学, 好 y Б flotando dentro">
+  </picture>
 </p>
 
 <p align="center">

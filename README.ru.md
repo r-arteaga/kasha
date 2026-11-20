@@ -1,5 +1,8 @@
 <p align="center">
-  <img src="docs/images/kasha.jpg" width="340" alt="Kasha: щенок с горкой каши на голове льёт кашу из половника, а в ней плавают 안녕, 学, 好 и Б">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/kasha-dark.png">
+    <img src="docs/images/kasha.png" width="340" alt="Kasha: щенок с горкой каши на голове льёт кашу из половника, а в ней плавают 안녕, 学, 好 и Б">
+  </picture>
 </p>
 
 <p align="center">

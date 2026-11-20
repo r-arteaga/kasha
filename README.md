@@ -1,9 +1,9 @@
 <p align="center">
-  <b>English</b> · <a href="README.es.md">Español</a> · <a href="README.ru.md">Русский</a>
+  <img src="docs/images/kasha.jpg" width="340" alt="Kasha: a puppy with a heap of porridge on its head, pouring a ladle of porridge with 안녕, 学, 好 and Б floating in it">
 </p>
 
 <p align="center">
-  <img src="docs/images/kasha.jpg" width="340" alt="Kasha: a puppy with a heap of porridge on its head, pouring a ladle of porridge with 안녕, 学, 好 and Б floating in it">
+  <b>English</b> · <a href="README.es.md">Español</a> · <a href="README.ru.md">Русский</a>
 </p>
 
 <h3 align="center"><i>Каша в голове</i></h3>

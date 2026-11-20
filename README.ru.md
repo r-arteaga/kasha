@@ -1,9 +1,9 @@
 <p align="center">
-  <a href="README.md">English</a> · <a href="README.es.md">Español</a> · <b>Русский</b>
+  <img src="docs/images/kasha.jpg" width="340" alt="Kasha: щенок с горкой каши на голове льёт кашу из половника, а в ней плавают 안녕, 学, 好 и Б">
 </p>
 
 <p align="center">
-  <img src="docs/images/kasha.jpg" width="340" alt="Kasha: щенок с горкой каши на голове льёт кашу из половника, а в ней плавают 안녕, 学, 好 и Б">
+  <a href="README.md">English</a> · <a href="README.es.md">Español</a> · <b>Русский</b>
 </p>
 
 <h3 align="center"><i>Каша в голове</i></h3>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Kasha</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="Lector karaoke para practicar shadowing en otros idiomas." />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+    <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141311" media="(prefers-color-scheme: dark)" />
+    <!-- Opened from the home screen, iOS shows it full screen with the clock bar above the app. -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Kasha" />
+  </head>
+  <body>
+    <script>
+      // Sets the theme before Angular starts, so the first paint is already light or dark. Same rule and same key as
+      // src/app/settings/app-theme.ts (stored as JSON): "dark" or "light" pins it, anything else follows the phone.
+      (function () {
+        var mode = null;
+        try {
+          mode = JSON.parse(localStorage.getItem('kalare.theme'));
+        } catch (e) {}
+        var dark =
+          mode === 'dark' ||
+          (mode !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (dark) document.body.setAttribute('tuiTheme', 'dark');
+      })();
+    </script>
+    <app-root></app-root>
+    <noscript>Kasha necesita JavaScript.</noscript>
+  </body>
+</html>

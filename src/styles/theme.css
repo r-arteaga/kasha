@@ -1,0 +1,29 @@
+/* Taiga's variables mapped onto Kasha's tokens, for light (:root) and dark ([tuiTheme='dark'] on <body>).
+   This file loads after Taiga's theme, so with equal specificity it wins. */
+:root,
+[tuiTheme] {
+  --tui-typography-family-text: var(--k-font);
+  --tui-typography-family-display: var(--k-font);
+
+  --tui-background-base: var(--k-paper);
+  --tui-background-base-alt: var(--k-surface);
+  --tui-background-elevation-1: var(--k-paper);
+  --tui-background-elevation-2: var(--k-surface);
+  --tui-background-neutral-1: color-mix(in srgb, var(--k-ink) 6%, transparent);
+  --tui-background-neutral-1-hover: color-mix(in srgb, var(--k-ink) 10%, transparent);
+  --tui-background-neutral-1-pressed: color-mix(in srgb, var(--k-ink) 14%, transparent);
+
+  --tui-background-accent-1: var(--k-accent);
+  --tui-background-accent-1-hover: var(--k-accent-hover);
+  --tui-background-accent-1-pressed: var(--k-accent-pressed);
+  --tui-text-primary-on-accent-1: var(--k-on-accent);
+
+  --tui-text-primary: var(--k-ink);
+  --tui-text-secondary: var(--k-ink-muted);
+  --tui-text-action: var(--k-accent);
+  --tui-text-action-hover: var(--k-accent-hover);
+
+  --tui-border-normal: var(--k-line);
+  --tui-border-hover: color-mix(in srgb, var(--k-ink) 24%, transparent);
+  --tui-border-focus: var(--k-accent);
+}

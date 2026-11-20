@@ -1,0 +1,146 @@
+<ng-container *transloco="let t">
+  @if (picking()) {
+    <!-- Selection mode, as in Photos or WhatsApp: leave, how many are picked, all or none. -->
+    <header class="bar select-bar">
+      <button tuiIconButton type="button" appearance="flat" size="m" iconStart="@tui.x" (click)="cancelPicking()">
+        {{ t('lesson.cancel') }}
+      </button>
+      <span class="select-count" aria-live="polite">
+        @if (pickedCount() === 0) {
+          {{ t('lesson.pickTitle') }}
+        } @else {
+          {{ t(pickedCount() === 1 ? 'lesson.pickedOne' : 'lesson.pickedSentences', { count: pickedCount() }) }}
+        }
+      </span>
+      <button tuiButton type="button" appearance="flat" size="s" class="select-all" (click)="toggleAll()">
+        {{ t(allPicked() ? 'lesson.selectNone' : 'lesson.selectAll') }}
+      </button>
+    </header>
+  } @else {
+  <header class="bar">
+    <a tuiIconButton appearance="flat" size="m" iconStart="@tui.arrow-left" routerLink="/" class="back">
+      {{ t('lesson.back') }}
+    </a>
+    @if (lesson(); as lesson) {
+      <a
+        tuiIconButton
+        appearance="flat"
+        size="m"
+        iconStart="@tui.pencil"
+        class="edit"
+        [routerLink]="['/lesson', lesson.id, 'edit']"
+      >
+        {{ t('lesson.edit') }}
+      </a>
+    }
+  </header>
+  }
+
+  @if (lesson(); as lesson) {
+    <main class="page">
+      <h1 class="title">{{ lesson.title }}</h1>
+
+      @if (picking()) {
+        <ol class="sentences" [attr.aria-label]="t('lesson.pickTitle')">
+          @for (row of sentenceRows(); track row.index) {
+            <li
+              class="sentence"
+              role="checkbox"
+              tabindex="0"
+              [class.picked]="row.picked"
+              [class.first]="row.first"
+              [class.last]="row.last"
+              [class.paragraph]="row.paragraph"
+              [attr.aria-checked]="row.picked"
+              (click)="tapSentence(row.index)"
+              (keydown.enter)="tapSentence(row.index)"
+              (keydown.space)="$event.preventDefault(); tapSentence(row.index)"
+            >
+              <span class="check" aria-hidden="true">
+                @if (row.picked) {
+                  <tui-icon icon="@tui.check" />
+                }
+              </span>
+              <span class="sentence-text">{{ row.text }}</span>
+            </li>
+          }
+        </ol>
+      } @else {
+      <tui-segmented
+        class="sections"
+        size="m"
+        [attr.aria-label]="t('lesson.sections')"
+        [activeItemIndex]="section() === 'text' ? 0 : 1"
+        (activeItemIndexChange)="chooseSection($event === 0 ? 'text' : 'kashas')"
+      >
+        <button type="button" [attr.aria-pressed]="section() === 'text'">{{ t('lesson.text') }}</button>
+        <button type="button" [attr.aria-pressed]="section() === 'kashas'">
+          {{ t('lesson.kashas') }}
+          <span class="count">{{ kashas().length }}</span>
+        </button>
+      </tui-segmented>
+
+      @if (section() === 'text') {
+        <div class="text">
+          @for (run of runs(); track $index) {
+            @if (run.marked) {
+              <mark class="run marked">{{ run.text }}</mark>
+            } @else {
+              <span class="run">{{ run.text }}</span>
+            }
+          }
+        </div>
+      } @else if (rows().length > 0) {
+        <ul class="kashas">
+          @for (row of rows(); track row.id) {
+            <li class="kasha-row">
+              <a class="kasha" [routerLink]="['/kasha', row.id]">
+                <span class="kasha-text">{{ row.text }}</span>
+                @if (confirmingDelete() === row.id) {
+                  <span class="kasha-meta confirm" aria-live="polite">{{ t('lesson.confirmDelete') }}</span>
+                } @else {
+                  <span class="kasha-meta">{{ row.meta }}</span>
+                }
+              </a>
+              <button
+                tuiIconButton
+                type="button"
+                size="s"
+                iconStart="@tui.trash-2"
+                class="delete"
+                [appearance]="confirmingDelete() === row.id ? 'destructive' : 'flat'"
+                (click)="deleteKasha(row.id)"
+              >
+                {{ t(confirmingDelete() === row.id ? 'lesson.confirmDelete' : 'lesson.deleteKasha') }}
+              </button>
+            </li>
+          }
+        </ul>
+      } @else {
+        <div class="empty">
+          <p class="empty-title">{{ t('lesson.noKashas') }}</p>
+          <p class="empty-hint">{{ t('lesson.noKashasHint') }}</p>
+        </div>
+      }
+      }
+    </main>
+
+    <footer class="actions">
+      @if (picking()) {
+        <button tuiButton type="button" size="l" class="new" [disabled]="!picked()" (click)="next()">
+          {{ t('lesson.next') }}
+        </button>
+      } @else {
+        <button tuiButton type="button" size="l" iconStart="@tui.plus" class="new" (click)="startPicking()">
+          {{ t('lesson.newKasha') }}
+        </button>
+      }
+    </footer>
+  } @else if (state() !== 'loading') {
+    <main class="page missing">
+      <h1 class="title">{{ t('lesson.missingTitle') }}</h1>
+      <p class="lead">{{ t('lesson.missingText') }}</p>
+      <a tuiButton size="l" appearance="secondary" routerLink="/" [replaceUrl]="true">{{ t('lesson.toLessons') }}</a>
+    </main>
+  }
+</ng-container>

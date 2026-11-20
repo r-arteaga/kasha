@@ -1,0 +1,154 @@
+<ng-container *transloco="let t">
+  <header class="bar">
+    <a
+      tuiIconButton
+      appearance="flat"
+      size="m"
+      iconStart="@tui.arrow-left"
+      class="back"
+      [routerLink]="['/lesson', id()]"
+      [replaceUrl]="true"
+    >
+      {{ t('newKasha.back') }}
+    </a>
+  </header>
+
+  @if (passage()) {
+  <main class="page">
+    <h1 class="title">{{ t('newKasha.title') }}</h1>
+    <p class="lead">{{ t('newKasha.lead') }}</p>
+
+    <form class="form" [formGroup]="form" (ngSubmit)="generate()">
+      <figure class="passage">
+        <figcaption class="passage-caption">{{ t('newKasha.passage') }}</figcaption>
+        <blockquote class="passage-text">{{ passageText() }}</blockquote>
+      </figure>
+
+      @if (catalogState() === 'failed') {
+        <div tuiNotification appearance="warning" class="notice" role="alert">
+          {{ t('newKasha.voicesFailed') }}
+          <button tuiButton type="button" size="s" appearance="flat" (click)="retryVoices()">
+            {{ t('newKasha.retry') }}
+          </button>
+        </div>
+      } @else {
+        <tui-segmented
+          class="modes"
+          size="m"
+          [attr.aria-label]="t('newKasha.voiceChoice')"
+          [activeItemIndex]="mode() === 'voice' ? 0 : 1"
+          (activeItemIndexChange)="chooseMode($event === 0 ? 'voice' : 'fav')"
+        >
+          <button type="button" [attr.aria-pressed]="mode() === 'voice'">{{ t('newKasha.voiceMode') }}</button>
+          <button type="button" [attr.aria-pressed]="mode() === 'fav'">{{ t('newKasha.favMode') }}</button>
+        </tui-segmented>
+
+        @if (mode() === 'fav') {
+          @if (favorites().length > 0) {
+            <div class="favorites">
+              @for (favorite of favorites(); track favorite.voice.name) {
+                <button
+                  type="button"
+                  class="favorite"
+                  [class.chosen]="chosenVoice()?.name === favorite.voice.name"
+                  [attr.aria-pressed]="chosenVoice()?.name === favorite.voice.name"
+                  (click)="choose(favorite)"
+                >
+                  <span class="favorite-voice">{{ voiceLabel()(favorite.voice) }}</span>
+                  <span class="favorite-language">{{ languageLabel()(favorite.language) }}</span>
+                </button>
+              }
+            </div>
+          } @else {
+            <div class="favorites-empty">
+              <tui-icon icon="@tui.star" class="favorites-empty-icon" />
+              <p class="favorites-empty-text">{{ t('newKasha.noFavorites') }}</p>
+              <p class="favorites-empty-hint">{{ t('newKasha.noFavoritesHint') }}</p>
+              <button tuiButton type="button" size="s" appearance="secondary" (click)="chooseMode('voice')">
+                {{ t('newKasha.chooseVoiceInstead') }}
+              </button>
+            </div>
+          }
+        } @else {
+        <div class="pickers">
+          <tui-textfield tuiChevron [stringify]="languageLabel()" [tuiTextfieldCleaner]="false">
+            <label tuiLabel for="language">{{ t('newKasha.language') }}</label>
+            <select
+              id="language"
+              tuiSelect
+              formControlName="language"
+              [items]="languages()"
+              [placeholder]="t(catalogState() === 'loading' ? 'newKasha.loadingVoices' : 'newKasha.chooseLanguage')"
+            ></select>
+          </tui-textfield>
+
+          <div class="voice-row">
+            <tui-textfield tuiChevron class="voice-field" [stringify]="voiceLabel()" [tuiTextfieldCleaner]="false">
+              <label tuiLabel for="voice">{{ t('newKasha.voice') }}</label>
+              <select
+                id="voice"
+                tuiSelect
+                formControlName="voice"
+                [items]="voices()"
+                [placeholder]="t('newKasha.chooseVoice')"
+              ></select>
+            </tui-textfield>
+            <button
+              tuiIconButton
+              type="button"
+              size="l"
+              iconStart="@tui.star"
+              [appearance]="isFavorite() ? 'primary' : 'secondary'"
+              [attr.aria-pressed]="isFavorite()"
+              [disabled]="!chosenVoice()"
+              (click)="toggleFavorite()"
+            >
+              {{ t('newKasha.markFavorite') }}
+            </button>
+          </div>
+        </div>
+        }
+      }
+
+      @if (problem() === 'empty') {
+        <p tuiNotification appearance="warning" class="notice" role="alert">{{ t('newKasha.nothingToRead') }}</p>
+      } @else if (problem() === 'failed') {
+        <p tuiNotification appearance="negative" class="notice" role="alert">{{ t('newKasha.generationFailed') }}</p>
+      }
+
+      <div class="actions">
+        @if (generating()) {
+          <div class="progress" role="status" aria-live="polite">
+            <progress tuiProgressBar size="s" [max]="total() || 1" [value]="done()"></progress>
+            <span class="progress-label">
+              @if (total() > 0) {
+                {{ t('newKasha.generating', { done: done(), total: total() }) }}
+              } @else {
+                {{ t('newKasha.preparing') }}
+              }
+            </span>
+          </div>
+        } @else {
+          <button
+            tuiButton
+            type="submit"
+            size="l"
+            class="generate"
+            [disabled]="form.invalid || catalogState() !== 'ready' || (mode() === 'fav' && favorites().length === 0)"
+          >
+            {{ t('newKasha.generate') }}
+          </button>
+        }
+      </div>
+    </form>
+  </main>
+  } @else if (libraryState() !== 'loading') {
+    <main class="page missing">
+      <h1 class="title">{{ t('newKasha.missingTitle') }}</h1>
+      <p class="lead">{{ t('newKasha.missingText') }}</p>
+      <a tuiButton size="l" appearance="secondary" [routerLink]="['/lesson', id()]" [replaceUrl]="true">
+        {{ t('newKasha.back') }}
+      </a>
+    </main>
+  }
+</ng-container>

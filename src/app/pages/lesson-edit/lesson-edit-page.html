@@ -1,0 +1,67 @@
+<ng-container *transloco="let t">
+  <header class="bar">
+    <a tuiIconButton appearance="flat" size="m" iconStart="@tui.arrow-left" class="back" [routerLink]="back()">
+      {{ t('editor.back') }}
+    </a>
+  </header>
+
+  <main class="page">
+    <h1 class="title">{{ t(id() ? 'editor.editTitle' : 'editor.newTitle') }}</h1>
+
+    <form class="form" [formGroup]="form" (ngSubmit)="save()">
+      <tui-textfield>
+        <label tuiLabel for="title">{{ t('editor.title') }}</label>
+        <input
+          id="title"
+          tuiInput
+          formControlName="title"
+          autocomplete="off"
+          autocapitalize="sentences"
+          [placeholder]="t('editor.titlePlaceholder')"
+        />
+      </tui-textfield>
+
+      <tui-textfield>
+        <label tuiLabel for="text">{{ t('editor.text') }}</label>
+        <textarea
+          id="text"
+          tuiTextarea
+          formControlName="text"
+          autocomplete="off"
+          autocapitalize="sentences"
+          spellcheck="false"
+          [placeholder]="t('editor.textPlaceholder')"
+          [minRows]="10"
+          [maxRows]="22"
+        ></textarea>
+      </tui-textfield>
+
+      @if (failed()) {
+        <p tuiNotification appearance="negative" role="alert">{{ t('editor.saveFailed') }}</p>
+      }
+
+      <button tuiButton type="submit" size="l" class="save" [disabled]="!canSave() || saving()">
+        {{ t('editor.save') }}
+      </button>
+
+      @if (lesson()) {
+        <div class="danger">
+          <button
+            tuiButton
+            type="button"
+            size="m"
+            appearance="flat-destructive"
+            iconStart="@tui.trash-2"
+            [attr.aria-live]="'polite'"
+            (click)="remove()"
+          >
+            {{ t(confirmingDelete() ? 'editor.confirmDelete' : 'editor.delete') }}
+          </button>
+          @if (confirmingDelete() && kashaCount() > 0) {
+            <p class="danger-hint">{{ t('editor.deleteKashas', { count: kashaCount() }) }}</p>
+          }
+        </div>
+      }
+    </form>
+  </main>
+</ng-container>

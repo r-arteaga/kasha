@@ -1,0 +1,78 @@
+<ng-container *transloco="let t">
+  <header class="bar">
+    <a tuiIconButton appearance="flat" size="m" iconStart="@tui.arrow-left" routerLink="/">{{ t('settings.back') }}</a>
+  </header>
+
+  <main class="page">
+    <h1 class="title">{{ t('settings.title') }}</h1>
+
+    @if (!install.installed()) {
+      <section class="group">
+        <h2 class="group-title">{{ t('settings.app') }}</h2>
+        <div class="options">
+          <button type="button" class="option install" (click)="openInstall()">
+            <tui-icon class="option-icon" icon="@tui.square-plus" />
+            <span class="option-text">
+              <span class="option-label">{{ t('settings.install') }}</span>
+              <span class="option-hint">{{ t('settings.installHint') }}</span>
+            </span>
+            <tui-icon class="option-chevron" icon="@tui.chevron-right" />
+          </button>
+        </div>
+      </section>
+    }
+
+    <fieldset class="group">
+      <legend class="group-title">{{ t('settings.theme') }}</legend>
+      <div class="options">
+        @for (option of themes; track option.mode) {
+          <label class="option">
+            <input
+              type="radio"
+              name="theme"
+              class="radio"
+              [value]="option.mode"
+              [checked]="theme.mode() === option.mode"
+              (change)="theme.set(option.mode)"
+            />
+            <tui-icon class="option-icon" [icon]="option.icon" />
+            <span class="option-text">
+              <span class="option-label">{{ t(option.label) }}</span>
+              @if (option.hint) {
+                <span class="option-hint">{{ t(option.hint) }}</span>
+              }
+            </span>
+            @if (theme.mode() === option.mode) {
+              <tui-icon class="option-check" icon="@tui.check" />
+            }
+          </label>
+        }
+      </div>
+    </fieldset>
+
+    <fieldset class="group">
+      <legend class="group-title">{{ t('settings.language') }}</legend>
+      <div class="options">
+        @for (lang of langs; track lang) {
+          <label class="option" [attr.lang]="lang">
+            <input
+              type="radio"
+              name="language"
+              class="radio"
+              [value]="lang"
+              [checked]="language.lang() === lang"
+              (change)="language.set(lang)"
+            />
+            <span class="option-text">
+              <span class="option-label">{{ langNames[lang] }}</span>
+            </span>
+            @if (language.lang() === lang) {
+              <tui-icon class="option-check" icon="@tui.check" />
+            }
+          </label>
+        }
+      </div>
+      <p class="group-hint">{{ t('settings.languageHint') }}</p>
+    </fieldset>
+  </main>
+</ng-container>

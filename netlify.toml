@@ -1,0 +1,17 @@
+# Netlify builds the Angular app and bundles the functions in netlify/functions (each declares its /api path).
+[build]
+  command = "npm run build"
+  publish = "dist/kalare/browser"
+
+# The Node version the app is built and tested with locally.
+[build.environment]
+  NODE_VERSION = "24"
+
+[functions]
+  node_bundler = "esbuild"
+
+# The app is a single-page app: every other path serves index.html.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

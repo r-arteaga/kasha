@@ -1,0 +1,36 @@
+/* Kasha tokens (docs/DESIGN.md §3). Light by default; dark when <body> carries tuiTheme="dark", which Taiga sets
+   from the theme chosen in Ajustes (or the phone's) and the script in index.html sets before Angular starts. The
+   tokens stay on :root so the page background behind the safe areas switches too. */
+:root {
+  color-scheme: light;
+
+  --k-paper: #fbfaf7;
+  --k-surface: #f2f0eb;
+  --k-ink: #1c1b19;
+  --k-ink-muted: #6b6760;
+  --k-line: #e3e0d9;
+  --k-accent: #b93d0b;
+  --k-accent-hover: #a2340a;
+  --k-accent-pressed: #8b2d08;
+  --k-on-accent: #ffffff;
+  --k-marker: #ffd66b;
+
+  --k-gutter: 1rem;
+  --k-font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, 'Segoe UI', Roboto, 'Hiragino Sans',
+    'PingFang SC', 'Noto Sans', sans-serif;
+}
+
+:root:has(> body[tuiTheme='dark']) {
+  color-scheme: dark;
+
+  --k-paper: #141311;
+  --k-surface: #1e1c19;
+  --k-ink: #edeae4;
+  --k-ink-muted: #a39e95;
+  --k-line: #2c2a26;
+  --k-accent: #fb923c;
+  --k-accent-hover: #fca15a;
+  --k-accent-pressed: #f97f1c;
+  --k-on-accent: #1c1b19;
+  --k-marker: #6b4c0e;
+}

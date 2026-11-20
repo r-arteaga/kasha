@@ -49,7 +49,7 @@ The home screen lists her lessons: texts she keeps to practise from, like notes.
 - `@angular/pwa` set up the manifest (`public/manifest.webmanifest`) and Angular's service worker (`ngsw-config.json`): the app's files are cached on the first visit, so it opens without a connection. `/api/*` is never cached: generating a kasha needs the network, playing one does not (its audio is in IndexedDB). The worker only runs in production builds; `npm start` does not use it.
 - iPhone: Safari has no install button, so `@khmyznikov/pwa-install` (`src/app/settings/install-app.ts`) shows how to add Kasha to the home screen. It opens only when she taps "Instalar Kasha" in Ajustes: its code loads then (its own chunk, about 38 kB compressed) and the element leaves the page with Ajustes, because once in the page Android opens it by itself at the next tap when the browser offers no install of its own. Its texts follow the phone's language; the description is Kasha's own, in the app's language.
 - Installed, iOS keeps the app's data; a site only visited in Safari can lose it after weeks without use.
-- Icons: `uv run --with pillow scripts/make-icons.py` redraws `public/icons/*` and `public/favicon.ico`.
+- Icons: `uv run --with resvg-py --with pillow scripts/make-icons.py` redraws `public/icons/*` and `public/favicon.ico` from `public/logo.svg`.
 - To try the production build with its service worker locally, build it and serve `dist/kalare/browser` on `localhost` (service workers need HTTPS or localhost; on the phone through the PC's address they do not register, so the full check is on Netlify).
 
 ## Settings: theme and language

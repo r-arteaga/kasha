@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/icons/icon-192.png" width="88" alt="Icono de Kasha: una K sobre una marca de rotulador">
+  <img src="public/logo.svg" width="120" alt="Logo de Kasha: un cucharón de kasha con el carácter 学, «aprender»">
 </p>
 
 <h1 align="center">Kasha</h1>

@@ -3,14 +3,18 @@
 </p>
 
 <p align="center">
-  <img src="docs/images/kasha.webp" width="340" alt="Kasha: a puppy with a heap of porridge on its head, pouring a ladle of porridge with 안녕, 学, 好 and Б floating in it">
+  <img src="docs/images/kasha.jpg" width="340" alt="Kasha: a puppy with a heap of porridge on its head, pouring a ladle of porridge with 안녕, 学, 好 and Б floating in it">
 </p>
 
 <h3 align="center"><i>Каша в голове</i></h3>
 
 <p align="center">
-  <i>Kasha v golove</i>, “porridge in the head”, is how Russians say your head is a mess:<br>
-  everything in it has boiled down into one big mush. Learn a few languages at once and you know the feeling.
+  Is learning languages turning your head to porridge?<br>
+  <b>KA</b>raoke <b>SHA</b>dowing serves it up one spoonful at a time.
+</p>
+
+<p align="center">
+  <sub><i>Kasha v golove</i>, “porridge in the head”, is how Russians say your head is a muddle.</sub>
 </p>
 
 <p align="center">
@@ -22,7 +26,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="license: MIT"></a>
 </p>
 
-Kasha serves it one spoonful at a time. Paste a text in the language you're learning, pick a voice, and listen with each word lit up as it's spoken. You repeat right behind it: that's *shadowing*. The name says it too: **KA**raoke **SHA**dowing.
+Paste a text in the language you're learning, pick a voice, and listen with each word lit up as it's spoken. You repeat right behind it: that's *shadowing*.
 
 | 1 · Save the lesson | 2 · Pick the sentences | 3 · Listen and repeat |
 |:---:|:---:|:---:|

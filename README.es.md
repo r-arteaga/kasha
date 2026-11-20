@@ -3,14 +3,18 @@
 </p>
 
 <p align="center">
-  <img src="docs/images/kasha.webp" width="340" alt="Kasha: un perrito con un montón de gachas en la cabeza que vierte un cucharón de gachas con 안녕, 学, 好 y Б flotando dentro">
+  <img src="docs/images/kasha.jpg" width="340" alt="Kasha: un perrito con un montón de gachas en la cabeza que vierte un cucharón de gachas con 안녕, 学, 好 y Б flotando dentro">
 </p>
 
 <h3 align="center"><i>Каша в голове</i></h3>
 
 <p align="center">
-  <i>Kasha v golove</i>, «gachas en la cabeza», es como se dice en ruso que tienes la cabeza hecha un lío:<br>
-  todo lo que hay dentro se ha cocido junto en una sola papilla. Si aprendes varios idiomas a la vez, sabes de qué va.
+  ¿Aprender idiomas te deja la cabeza hecha gachas?<br>
+  <b>KA</b>raoke <b>SHA</b>dowing te lo da cucharada a cucharada.
+</p>
+
+<p align="center">
+  <sub><i>Kasha v golove</i>, «gachas en la cabeza», es como se dice en ruso que tienes la cabeza hecha un lío.</sub>
 </p>
 
 <p align="center">
@@ -22,7 +26,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="license: MIT"></a>
 </p>
 
-Kasha te la sirve cucharada a cucharada. Pegas un texto en el idioma que estudias, eliges una voz y lo escuchas con cada palabra marcada mientras suena. Tú repites detrás: *shadowing*. El nombre también lo dice: **KA**raoke **SHA**dowing.
+Pegas un texto en el idioma que estudias, eliges una voz y lo escuchas con cada palabra marcada mientras suena. Tú repites detrás: eso es el *shadowing*.
 
 | 1 · Guarda la lección | 2 · Elige las frases | 3 · Escucha y repite |
 |:---:|:---:|:---:|

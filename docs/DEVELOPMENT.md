@@ -35,14 +35,17 @@ Shadowing practice (`src/app/reading/domain/shadowing.ts`): "Repetir frase" play
 
 ## Lessons and kashas
 
-The home screen lists her lessons: texts she keeps to practise from, like notes. Inside a lesson she picks a passage, chooses a voice, and gets a kasha: the passage voiced, with its timeline, which opens in the player.
+The home screen opens on a box: she pastes a text and taps ▷ (Escuchar). `/listen` recognises the language on the phone (`src/app/reading/tts/detect-language.ts`: the writing system first, then common words for texts in Latin letters; no AI and no service), picks a random voice of the kind chosen in Ajustes (`default-voice.ts`, a woman's voice by default), makes the audio and starts playing a second later. The tap on ▷ plays a moment of silence on the one audio element all players share (`shared-audio.ts`), because Safari on iPhone only lets an element start by itself after it has played during a tap. In the player, tapping a word of the sentence being read holds the reading; tapping another sentence jumps to its start; the speeds are normal and slow (0.5×).
+
+A kasha is a voiced text she keeps: one or more sentences with their voice, audio and timeline. It may stand alone or sit in a lesson, which works as a folder; the home screen has a tab for each. Older lessons keep their text, and inside them she can still pick a passage, choose a voice and get a kasha of that passage.
 
 - Everything is kept on the phone in IndexedDB (`src/app/library/library-storage.ts`, database `kalare`; this and the `kalare.*` settings keep the app's first name so data saved before the rename to Kasha stays): lessons, kashas and their audio, as bytes, because older iOS Safari failed to store Blobs. The library (`src/app/library/library.ts`) holds the lists in memory as signals and writes to storage first, so a restart finds what the screens showed.
 - A kasha keeps its own copy of the passage, voice and audio, so editing or shortening the lesson never breaks it; its passage is only marked in the lesson while the text there is still the same.
 - The code calls them kashas throughout (`Kasha`, `addKasha`, `NewKashaPage` in `src/app/pages/new-kasha`); only the stored names keep the first ones, the store `karales` inside the database `kalare`, so what was saved before the renames stays.
 - Deleting a lesson deletes its kashas and their audio in the same transaction.
 - On the first save the app asks the browser to keep the data (`navigator.storage.persist()`). Safari may still clear the data of a site that is not installed and goes unused for weeks; installed as an app it keeps it.
-- Routes, in English like the rest of the code: `/` lessons, `/lesson/new`, `/lesson/:id`, `/lesson/:id/edit`, `/lesson/:id/kasha/new?from=&to=` (voice for a passage, in characters of the lesson's text), `/kasha/:id` (player), `/settings`. Any other address goes to the lessons.
+- A kasha with no `lessonId` stands alone; putting it in a lesson or taking it out (`Library.moveKasha`) rewrites only its data, not its audio. No stored record changed shape for this, so nothing needed migrating.
+- Routes, in English like the rest of the code: `/` home (paste box, kashas, lessons), `/listen` (the pasted text, voiced and played), `/lesson/new`, `/lesson/:id`, `/lesson/:id/edit`, `/lesson/:id/kasha/new?from=&to=` (voice for a passage, in characters of the lesson's text), `/kasha/:id` (player), `/settings`. Any other address goes to the home screen.
 
 ## Installing it as an app (PWA)
 

@@ -1,0 +1,73 @@
+<ng-container *transloco="let t">
+  <header class="bar">
+    <a tuiIconButton appearance="flat" size="m" iconStart="@tui.arrow-left" routerLink="/">{{ t('listen.back') }}</a>
+    @if (heading()) {
+      <span class="bar-title">{{ heading() }}</span>
+    }
+  </header>
+
+  @switch (stage()) {
+    @case ('ready') {
+      @if (track(); as track) {
+        <k-player-view [track]="track" [autoplay]="true">
+          @if (savedIn(); as saved) {
+            <span class="saved" role="status">
+              <tui-icon icon="@tui.check" />
+              <span class="saved-text">{{ saved.lesson ?? t('player.saved') }}</span>
+            </span>
+          } @else {
+            <button tuiButton type="button" size="s" appearance="secondary" iconStart="@tui.bookmark" (click)="sheetOpen.set(true)">
+              {{ t('player.save') }}
+            </button>
+          }
+        </k-player-view>
+      }
+    }
+    @case ('preparing') {
+      <main class="status" role="status" aria-live="polite">
+        <progress tuiProgressBar size="s" class="progress" [max]="total() || 1" [value]="done()"></progress>
+        <p class="status-text">
+          @if (total() > 0) {
+            {{ t('newKasha.generating', { done: done(), total: total() }) }}
+          } @else {
+            {{ t('newKasha.preparing') }}
+          }
+        </p>
+      </main>
+    }
+    @default {
+      <main class="status">
+        <tui-icon icon="@tui.circle-alert" class="status-icon" />
+        <p class="status-text">
+          @switch (stage()) {
+            @case ('noVoice') {
+              {{ t('listen.noVoice') }}
+            }
+            @case ('empty') {
+              {{ t('newKasha.nothingToRead') }}
+            }
+            @default {
+              {{ t('newKasha.generationFailed') }}
+            }
+          }
+        </p>
+        <div class="status-actions">
+          @if (stage() === 'failed') {
+            <button tuiButton type="button" size="m" (click)="prepare()">{{ t('newKasha.retry') }}</button>
+          }
+          <a tuiButton appearance="secondary" size="m" routerLink="/">{{ t('listen.back') }}</a>
+        </div>
+      </main>
+    }
+  }
+
+  @if (sheetOpen()) {
+    <k-save-sheet
+      mode="save"
+      [busy]="saving()"
+      [failed]="saveFailed()"
+      (chosen)="save($event)"
+      (closed)="sheetOpen.set(false)"
+    />
+  }
+</ng-container>

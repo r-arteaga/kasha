@@ -90,7 +90,12 @@
     "previous": "Previous sentence",
     "play": "Play",
     "pause": "Pause",
-    "next": "Next sentence"
+    "next": "Next sentence",
+    "slow": "Slow speed",
+    "save": "Save",
+    "saved": "Saved",
+    "addToLesson": "Add to a lesson",
+    "backHome": "Back"
   },
   "settings": {
     "title": "Settings",
@@ -101,10 +106,42 @@
     "themeLight": "Light",
     "themeDark": "Dark",
     "language": "App language",
-    "languageHint": "Changes the menus and buttons. The language you practice is chosen for each text.",
+    "languageHint": "Changes the menus and buttons. The text's language is recognised by itself.",
     "app": "App",
     "install": "Install Kasha",
     "installHint": "Open it from the home screen, full screen. That way the phone keeps your lessons.",
-    "installDescription": "Add it to your home screen: it opens full screen, without the browser, and the phone keeps your lessons."
+    "installDescription": "Add it to your home screen: it opens full screen, without the browser, and the phone keeps your lessons.",
+    "voice": "Voice",
+    "voiceFemale": "Female",
+    "voiceMale": "Male",
+    "voiceHint": "Kasha recognises the text's language and reads it with a voice of this kind."
+  },
+  "home": {
+    "pasteLabel": "Text to listen to",
+    "placeholder": "Paste or type a text here in the language you are learning",
+    "clear": "Clear the text",
+    "listen": "Listen",
+    "voiceFemale": "female voice",
+    "voiceMale": "male voice",
+    "tabKashas": "Kashas",
+    "tabLessons": "Lessons",
+    "noKashas": "You haven't saved any kashas yet",
+    "noKashasHint": "Paste a text above, listen to it and save it to practise whenever you like.",
+    "noLessonsHint": "A lesson groups kashas, like a folder. You can make one when you save a kasha."
+  },
+  "listen": {
+    "back": "Back",
+    "noVoice": "There are no voices for this text's language yet."
+  },
+  "save": {
+    "title": "Save kasha",
+    "moveTitle": "Keep in a lesson",
+    "noLesson": "No lesson",
+    "newLesson": "New lesson",
+    "newLessonName": "Lesson name",
+    "untitled": "Untitled",
+    "cancel": "Cancel",
+    "confirm": "Save",
+    "failed": "Couldn't save it. Please try again."
   }
 }

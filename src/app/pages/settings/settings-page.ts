@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { TuiButton, TuiIcon } from '@taiga-ui/core';
+import { DefaultVoice, type VoiceGender } from '../../reading/tts/default-voice';
 import { AppLanguage } from '../../settings/app-language';
 import { AppTheme, type ThemeMode } from '../../settings/app-theme';
 import { InstallApp } from '../../settings/install-app';
@@ -25,6 +26,7 @@ export class SettingsPage {
   protected readonly theme = inject(AppTheme);
   protected readonly language = inject(AppLanguage);
   protected readonly install = inject(InstallApp);
+  protected readonly voice = inject(DefaultVoice);
 
   constructor() {
     // The guide only lives while Ajustes is open: once in the page it could open by itself on Android.
@@ -35,6 +37,10 @@ export class SettingsPage {
     { mode: 'system', icon: '@tui.sun-moon', label: 'settings.themeSystem', hint: 'settings.themeSystemHint' },
     { mode: 'light', icon: '@tui.sun', label: 'settings.themeLight' },
     { mode: 'dark', icon: '@tui.moon', label: 'settings.themeDark' },
+  ];
+  protected readonly genders: readonly { gender: VoiceGender; label: string }[] = [
+    { gender: 'Female', label: 'settings.voiceFemale' },
+    { gender: 'Male', label: 'settings.voiceMale' },
   ];
   protected readonly langs = APP_LANGS;
   protected readonly langNames = LANG_NAMES;

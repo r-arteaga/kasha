@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Track } from '../track';
 import { KaraokePlayer } from './karaoke-player';
 import { PlaybackSpeed } from './playback-speed';
+import { SharedAudio } from './shared-audio';
 
 const track = (): Track => ({
   id: 't1',
@@ -34,34 +35,34 @@ describe('KaraokePlayer speed', () => {
     const player = TestBed.inject(KaraokePlayer);
     player.load(track());
 
-    TestBed.inject(PlaybackSpeed).set(0.6);
+    TestBed.inject(PlaybackSpeed).set(0.5);
     TestBed.tick();
 
     const audio = audioOf(player);
-    expect(audio.playbackRate).toBe(0.6);
+    expect(audio.playbackRate).toBe(0.5);
     expect(audio.preservesPitch).toBe(true);
     expect(audio.webkitPreservesPitch).toBe(true);
   });
 
   it('keeps the speed when a track is loaded, which resets the audio to its default rate', () => {
-    TestBed.inject(PlaybackSpeed).set(0.8);
+    TestBed.inject(PlaybackSpeed).set(0.5);
     const player = TestBed.inject(KaraokePlayer);
     TestBed.tick();
 
     player.load(track());
 
     const audio = audioOf(player);
-    expect(audio.defaultPlaybackRate).toBe(0.8);
-    expect(audio.playbackRate).toBe(0.8);
+    expect(audio.defaultPlaybackRate).toBe(0.5);
+    expect(audio.playbackRate).toBe(0.5);
   });
 
   it('starts at the speed chosen last time', () => {
-    localStorage.setItem('kalare.speed', '0.7');
+    localStorage.setItem('kalare.speed', '0.5');
 
     const player = TestBed.inject(KaraokePlayer);
     TestBed.tick();
 
-    expect(audioOf(player).playbackRate).toBe(0.7);
+    expect(audioOf(player).playbackRate).toBe(0.5);
   });
 });
 
@@ -98,5 +99,67 @@ describe('KaraokePlayer previous and next', () => {
 
     player.seek(2.5);
     expect([player.hasPrevious(), player.hasNext()]).toEqual([true, false]);
+  });
+
+  it('jumps to the start of another sentence when she taps one of its words, and plays', () => {
+    const play = vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined);
+    const player = TestBed.inject(KaraokePlayer);
+    player.load(threeSentences());
+    player.seek(0.5);
+
+    player.tapAt(2.4);
+
+    expect(player.time()).toBe(2);
+    expect(play).toHaveBeenCalled();
+  });
+
+  it('holds the reading where it is when she taps a word of the sentence being played', () => {
+    const player = TestBed.inject(KaraokePlayer);
+    player.load(threeSentences());
+    player.seek(1.2);
+    player.playing.set(true);
+    const pause = vi.mocked(HTMLMediaElement.prototype.pause);
+    pause.mockClear();
+
+    player.tapAt(1.5);
+
+    expect(pause).toHaveBeenCalled();
+    expect(player.time()).toBe(1.2);
+  });
+});
+
+describe('KaraokePlayer on the shared audio element', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => undefined);
+    vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(() => undefined);
+    let n = 0;
+    URL.createObjectURL = vi.fn(() => `blob:track-${++n}`);
+    URL.revokeObjectURL = vi.fn();
+  });
+  afterEach(() => vi.restoreAllMocks());
+
+  it('leaves the next screen’s track in place when the screen it leaves is closed after it', () => {
+    TestBed.configureTestingModule({});
+    const shared = TestBed.inject(SharedAudio);
+    const leaving = TestBed.runInInjectionContext(() => new KaraokePlayer());
+    leaving.load(track());
+    const arriving = TestBed.runInInjectionContext(() => new KaraokePlayer());
+    arriving.load(track());
+
+    leaving.ngOnDestroy();
+
+    expect(shared.element.getAttribute('src')).toBe('blob:track-2');
+  });
+
+  it('empties the element when the screen that plays on it is closed', () => {
+    TestBed.configureTestingModule({});
+    const shared = TestBed.inject(SharedAudio);
+    const player = TestBed.runInInjectionContext(() => new KaraokePlayer());
+    player.load(track());
+
+    player.ngOnDestroy();
+
+    expect(shared.element.hasAttribute('src')).toBe(false);
   });
 });

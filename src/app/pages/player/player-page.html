@@ -1,115 +1,36 @@
 <ng-container *transloco="let t">
   @if (track(); as track) {
     <header class="bar">
-      <a
-        tuiIconButton
-        appearance="flat"
-        size="m"
-        iconStart="@tui.arrow-left"
-        class="back"
-        [routerLink]="['/lesson', track.lessonId]"
-      >
-        {{ t('player.back') }}
+      <a tuiIconButton appearance="flat" size="m" iconStart="@tui.arrow-left" [routerLink]="back().link">
+        {{ t(back().label) }}
       </a>
+      <span class="bar-title">{{ track.title }}</span>
     </header>
 
-    <main class="reading">
-      <k-karaoke-text
-        [sentences]="track.sentences"
-        [position]="player.position()"
-        [locale]="track.locale"
-        [follow]="player.playing()"
-        (wordTap)="player.playFrom($event)"
-      />
-    </main>
-
-    <footer class="dock">
-      @if (player.turn(); as turn) {
-        <div class="turn" role="status" aria-live="polite">
-          <tui-icon icon="@tui.mic" class="turn-icon" />
-          <span class="turn-text">{{ t('player.yourTurn') }}</span>
-          <span class="turn-bar" aria-hidden="true" [style.animation-duration.ms]="turn.ms"></span>
-        </div>
-      }
-      <div class="track-line" aria-hidden="true">
-        <div class="track-fill" [style.transform]="'scaleX(' + player.progress() + ')'"></div>
-      </div>
-      <div class="practice">
-        <button
-          tuiIconButton
-          type="button"
-          size="m"
-          iconStart="@tui.repeat-1"
-          [appearance]="player.repeat() ? 'primary' : 'secondary'"
-          [attr.aria-pressed]="player.repeat()"
-          (click)="player.toggleRepeat()"
-        >
-          {{ t('player.repeat') }}
-        </button>
-        <button
-          tuiIconButton
-          type="button"
-          size="m"
-          iconStart="@tui.mic"
-          [appearance]="player.pauseToRepeat() ? 'primary' : 'secondary'"
-          [attr.aria-pressed]="player.pauseToRepeat()"
-          (click)="player.setPauseToRepeat(!player.pauseToRepeat())"
-        >
-          {{ t('player.pauseToRepeat') }}
-        </button>
-        <span class="time">
-          <span>{{ elapsed() }}</span>
-          <span class="time-total"> / {{ total() }}</span>
-        </span>
-      </div>
-      <tui-segmented
-        class="speeds"
+    <k-player-view [track]="track">
+      <button
+        tuiButton
+        type="button"
         size="s"
-        [attr.aria-label]="t('player.speed')"
-        [activeItemIndex]="speedIndex()"
-        (activeItemIndexChange)="chooseSpeed($event)"
+        appearance="secondary"
+        class="lesson-button"
+        [iconStart]="lessonTitle() ? '@tui.folder' : '@tui.folder-plus'"
+        (click)="sheetOpen.set(true)"
       >
-        @for (speed of speeds; track speed) {
-          <button type="button" [attr.aria-pressed]="speed === player.rate()">{{ speedLabels()[$index] }}</button>
-        }
-      </tui-segmented>
-      <div class="controls">
-        <div class="transport">
-          <button
-            tuiIconButton
-            type="button"
-            size="m"
-            appearance="flat"
-            iconStart="@tui.skip-back"
-            [disabled]="!player.hasPrevious()"
-            (click)="player.previous()"
-          >
-            {{ t('player.previous') }}
-          </button>
-          <button
-            tuiIconButton
-            type="button"
-            size="l"
-            class="play"
-            [iconStart]="player.active() ? '@tui.pause' : '@tui.play'"
-            (click)="player.toggle()"
-          >
-            {{ t(player.active() ? 'player.pause' : 'player.play') }}
-          </button>
-          <button
-            tuiIconButton
-            type="button"
-            size="m"
-            appearance="flat"
-            iconStart="@tui.skip-forward"
-            [disabled]="!player.hasNext()"
-            (click)="player.next()"
-          >
-            {{ t('player.next') }}
-          </button>
-        </div>
-      </div>
-    </footer>
+        <span>{{ lessonTitle() ?? t('player.addToLesson') }}</span>
+      </button>
+    </k-player-view>
+
+    @if (sheetOpen()) {
+      <k-save-sheet
+        mode="move"
+        [lessonId]="lessonId()"
+        [busy]="moving()"
+        [failed]="moveFailed()"
+        (chosen)="move($event)"
+        (closed)="sheetOpen.set(false)"
+      />
+    }
   } @else if (!loading()) {
     <main class="missing">
       <h1 class="missing-title">{{ t('player.missingTitle') }}</h1>

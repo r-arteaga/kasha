@@ -10,12 +10,14 @@ export interface Lesson {
 }
 
 /**
- * A voiced passage of a lesson: the part she wants to practise, with its voice, audio and timeline.
- * It keeps its own copy of the passage, so editing the lesson later never breaks it.
+ * A voiced text she keeps to practise: one or more sentences with their voice, audio and timeline. It may stand
+ * alone (pasted on the home screen) or belong to a lesson, as a folder. A kasha made from a passage of a lesson
+ * keeps its own copy of the passage, so editing the lesson later never breaks it.
  */
 export interface Kasha extends Omit<Track, 'audio'> {
-  lessonId: string;
-  /** Where the passage was in the lesson's text when the kasha was made (characters). */
+  /** The lesson it is kept in; missing for a kasha on its own. */
+  lessonId?: string;
+  /** Where the passage was in the lesson's text when the kasha was made (characters); 0 and the text's length otherwise. */
   start: number;
   end: number;
 }

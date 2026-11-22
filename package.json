@@ -4,13 +4,16 @@
   "scripts": {
     "ng": "ng",
     "start": "node scripts/dev.mjs",
+    "prebuild": "node scripts/icon-version.mts",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false",
     "start:app": "ng serve",
     "dev:api": "tsx scripts/dev-api.mts",
     "test:functions": "vitest run --config vitest.functions.config.mts",
-    "check": "npm run test && npm run test:functions && npm run build"
+    "check": "npm run test && npm run test:functions && npm run build",
+    "icons": "uv run --with resvg-py --with pillow scripts/make-icons.py && npm run icons:stamp",
+    "icons:stamp": "node scripts/icon-version.mts"
   },
   "private": true,
   "license": "MIT",

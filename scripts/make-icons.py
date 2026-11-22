@@ -1,7 +1,9 @@
 """Draws Kasha's app icons into public/icons (and public/favicon.ico) from the logo, public/logo.svg.
 
 The logo is a ladle of kasha with the character 学 ("to learn") in it.
-Run from the repository root with:  uv run --with resvg-py --with pillow scripts/make-icons.py
+Run from the repository root with:  npm run icons
+That draws them and then puts their new version on every address that names them (scripts/icon-version.mts),
+so phones fetch the new icons instead of keeping the old ones.
 """
 
 import io

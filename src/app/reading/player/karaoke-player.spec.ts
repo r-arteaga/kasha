@@ -17,6 +17,38 @@ const track = (): Track => ({
   audio: new Blob([new Uint8Array([1])], { type: 'audio/mpeg' }),
 });
 
+describe('KaraokePlayer now playing', () => {
+  class FakeMetadata {
+    constructor(readonly init: MediaMetadataInit) {}
+  }
+
+  beforeEach(() => {
+    vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => undefined);
+    vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(() => undefined);
+    URL.createObjectURL = vi.fn(() => 'blob:track');
+    URL.revokeObjectURL = vi.fn();
+    // jsdom has no Media Session.
+    Object.defineProperty(navigator, 'mediaSession', { value: { metadata: null }, configurable: true });
+    vi.stubGlobal('MediaMetadata', FakeMetadata);
+    TestBed.configureTestingModule({ providers: [KaraokePlayer] });
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+    Reflect.deleteProperty(navigator, 'mediaSession');
+  });
+
+  it('shows the kasha on the phone while its screen is open, and clears it when the screen closes', () => {
+    TestBed.inject(KaraokePlayer).load(track());
+
+    expect((navigator.mediaSession.metadata as unknown as FakeMetadata).init.title).toBe('Hallo.');
+
+    TestBed.resetTestingModule();
+
+    expect(navigator.mediaSession.metadata).toBeNull();
+  });
+});
+
 describe('KaraokePlayer speed', () => {
   beforeEach(() => {
     localStorage.clear();

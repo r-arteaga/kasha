@@ -60,3 +60,44 @@
     transition: none;
   }
 }
+
+/* Readings (pinyin, Korean romanization) over the words, as in Svet's "Pantalla II": every word is a column with
+   its reading on top. A unit (word plus the marks glued to it) never breaks, so a mark never starts a line. */
+.unit {
+  white-space: nowrap;
+  margin-inline-end: 0.2em;
+}
+
+:host(.with-readings) .word,
+.mark {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: bottom;
+  margin-block-end: 0.35em;
+}
+
+.reading {
+  font-size: 0.64em;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  color: color-mix(in srgb, var(--k-ink-muted) 65%, var(--k-paper));
+}
+
+.sentence.current .reading {
+  color: var(--k-ink-muted);
+}
+
+/* The spoken word's reading in full ink, so the eye finds it over the marker. */
+.word.spoken .reading {
+  color: var(--k-ink);
+  font-weight: 600;
+}
+
+.mark .reading {
+  visibility: hidden;
+}
+
+.base {
+  line-height: 1.4;
+}

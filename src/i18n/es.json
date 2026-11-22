@@ -79,7 +79,7 @@
     "multilingual": "multilingüe"
   },
   "player": {
-    "back": "Volver a la lección",
+    "back": "Volver",
     "missingTitle": "Esta kasha ya no está",
     "missingText": "Puede que la hayas borrado.",
     "toLessons": "Ir a lecciones",
@@ -94,7 +94,7 @@
     "slow": "Velocidad lenta",
     "save": "Guardar",
     "saved": "Guardada",
-    "addToLesson": "Añadir a una lección",
+    "addToLesson": "Guardar en una carpeta",
     "backHome": "Volver"
   },
   "settings": {
@@ -127,7 +127,8 @@
     "tabLessons": "Lecciones",
     "noKashas": "Aún no has guardado ninguna kasha",
     "noKashasHint": "Pega un texto arriba, escúchalo y guárdalo para practicarlo cuando quieras.",
-    "noLessonsHint": "Una lección agrupa kashas, como una carpeta. Al guardar una kasha puedes crear una."
+    "noLessonsHint": "Organiza tus kashas a tu gusto: carpetas, y carpetas dentro de carpetas.",
+    "noFolders": "Aún no tienes carpetas"
   },
   "listen": {
     "back": "Volver",
@@ -135,13 +136,32 @@
   },
   "save": {
     "title": "Guardar kasha",
-    "moveTitle": "Guardar en una lección",
-    "noLesson": "Sin lección",
-    "newLesson": "Nueva lección",
-    "newLessonName": "Nombre de la lección",
+    "moveTitle": "Guardar en una carpeta",
+    "noLesson": "Sin carpeta",
+    "newLesson": "Nueva carpeta",
+    "newLessonName": "Nombre de la carpeta",
     "untitled": "Sin título",
     "cancel": "Cancelar",
     "confirm": "Guardar",
-    "failed": "No se ha podido guardar. Inténtalo otra vez."
+    "failed": "No se ha podido guardar. Inténtalo otra vez.",
+    "moveFolderTitle": "Mover carpeta",
+    "top": "Arriba del todo"
+  },
+  "folder": {
+    "back": "Volver",
+    "path": "Dónde está la carpeta",
+    "newFolder": "Nueva carpeta",
+    "newSubfolder": "Nueva carpeta dentro",
+    "create": "Crear",
+    "rename": "Cambiar nombre",
+    "move": "Mover",
+    "delete": "Borrar",
+    "confirmDelete": "Toca otra vez para borrar",
+    "deleteHint": "Lo que hay dentro no se borra: sube a la carpeta de arriba.",
+    "lessonText": "Texto de la lección",
+    "emptyHint": "Carpeta vacía. Guarda aquí kashas desde el reproductor o crea carpetas dentro.",
+    "missingTitle": "Esta carpeta ya no está",
+    "foldersOne": "1 carpeta",
+    "foldersMany": "{{ count }} carpetas"
   }
 }

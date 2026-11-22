@@ -1,37 +1,69 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, type OnInit, output, signal } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { TuiButton, TuiIcon, TuiNotification } from '@taiga-ui/core';
+import type { Lesson } from '../../library/lesson';
 import { Library } from '../../library/library';
 
-/** "" keeps the kasha on its own, "new" makes a lesson, anything else is the id of one of her lessons. */
+/** "" is the top (no folder), "new" makes a folder there, anything else is the id of one of her folders. */
 type Choice = string;
 const NEW = 'new';
 
+interface Option {
+  folder: Lesson;
+  depth: number;
+}
+
+/** What is being placed: a text she just heard, a kasha already kept, or a folder. */
+export type SaveMode = 'save' | 'move' | 'moveFolder';
+
+const TITLES: Record<SaveMode, string> = {
+  save: 'save.title',
+  move: 'save.moveTitle',
+  moveFolder: 'save.moveFolderTitle',
+};
+
 /**
- * Where a kasha is kept: on its own or in a lesson, which works like a folder. A new lesson is made here with
- * just a name. Emits the chosen lesson (null for none); the page does the saving.
+ * Where something is kept in her tree of folders: at the top or in any folder, shown indented under the one it is
+ * in. A new folder can be made here with just a name. Emits the chosen folder (null for the top); the page saves.
  */
 @Component({
   selector: 'k-save-sheet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslocoDirective, TuiButton, TuiIcon, TuiNotification],
   templateUrl: './save-sheet.html',
-  styleUrl: './save-sheet.css',
+  styleUrl: '../shared/sheet.css',
 })
 export class SaveSheet implements OnInit {
   private readonly library = inject(Library);
 
-  /** "save" for a text she just heard, "move" for a kasha already kept. */
-  readonly mode = input<'save' | 'move'>('save');
-  /** The lesson the kasha is in now. */
+  readonly mode = input<SaveMode>('save');
+  /** The folder it is in now. */
   readonly lessonId = input<string | null>(null);
+  /** A folder being moved cannot go inside itself or one of its own folders. */
+  readonly exclude = input<string | null>(null);
   /** Set by the page while it saves, and when saving failed. */
   readonly busy = input(false);
   readonly failed = input(false);
   readonly chosen = output<string | null>();
   readonly closed = output<void>();
 
-  protected readonly lessons = this.library.lessons;
+  protected readonly title = computed(() => TITLES[this.mode()]);
+  protected readonly topLabel = computed(() => (this.mode() === 'moveFolder' ? 'save.top' : 'save.noLesson'));
+  /** Every folder, each under the one it is in, depth first. */
+  protected readonly options = computed<Option[]>(() => {
+    const excluded = this.exclude();
+    const hidden = excluded ? this.library.descendants(excluded) : new Set<string>();
+    const out: Option[] = [];
+    const walk = (parentId: string | null, depth: number) => {
+      for (const folder of this.library.foldersIn(parentId)) {
+        if (hidden.has(folder.id)) continue;
+        out.push({ folder, depth });
+        walk(folder.id, depth + 1);
+      }
+    };
+    walk(null, 0);
+    return out;
+  });
   protected readonly choice = signal<Choice>('');
   protected readonly newTitle = signal('');
   protected readonly creating = signal(false);
@@ -63,10 +95,10 @@ export class SaveSheet implements OnInit {
     this.creating.set(true);
     this.createFailed.set(false);
     try {
-      const lesson = await this.library.saveLesson({ title: this.newTitle().trim(), text: '' });
-      this.chosen.emit(lesson.id);
+      const folder = await this.library.saveLesson({ title: this.newTitle().trim(), text: '', parentId: null });
+      this.chosen.emit(folder.id);
     } catch (error) {
-      console.error('Could not create the lesson', error);
+      console.error('Could not create the folder', error);
       this.createFailed.set(true);
     } finally {
       this.creating.set(false);

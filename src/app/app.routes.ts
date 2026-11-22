@@ -7,6 +7,7 @@ export const routes: Routes = [
     path: 'lesson/new',
     loadComponent: () => import('./pages/lesson-edit/lesson-edit-page').then((m) => m.LessonEditPage),
   },
+  { path: 'folder/:id', loadComponent: () => import('./pages/folder/folder-page').then((m) => m.FolderPage) },
   { path: 'lesson/:id', loadComponent: () => import('./pages/lesson/lesson-page').then((m) => m.LessonPage) },
   {
     path: 'lesson/:id/edit',

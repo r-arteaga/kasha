@@ -31,7 +31,7 @@ export class PlayerPage {
   });
   protected readonly back = computed(() => {
     const id = this.lessonId();
-    return id ? { link: ['/lesson', id], label: 'player.back' } : { link: ['/'], label: 'player.backHome' };
+    return id ? { link: ['/folder', id], label: 'player.back' } : { link: ['/'], label: 'player.backHome' };
   });
 
   protected readonly sheetOpen = signal(false);

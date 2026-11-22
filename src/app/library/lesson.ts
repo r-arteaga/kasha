@@ -1,10 +1,15 @@
 import type { Track } from '../reading/track';
 
-/** A text she keeps to practise from, like a note: a conversation, an article, her own notes. */
+/**
+ * A folder of her kashas, which may hold other folders: the "Lecciones" tab is a tree of them. Lessons made
+ * before the tree also keep a text she can still open and pick passages from.
+ */
 export interface Lesson {
   id: string;
   title: string;
   text: string;
+  /** The folder it sits in; missing at the top of the tree. */
+  parentId?: string;
   createdAt: number;
   updatedAt: number;
 }

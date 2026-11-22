@@ -6,6 +6,7 @@ describe('routes', () => {
       '',
       'listen',
       'lesson/new',
+      'folder/:id',
       'lesson/:id',
       'lesson/:id/edit',
       'lesson/:id/kasha/new',

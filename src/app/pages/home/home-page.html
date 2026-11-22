@@ -50,25 +50,8 @@
       </tui-segmented>
 
       @if (tab() === 'kashas') {
-        @if (kashaRows().length > 0) {
-          <ul class="list">
-            @for (row of kashaRows(); track row.id) {
-              <li>
-                <a class="row" [routerLink]="['/kasha', row.id]">
-                  <span class="row-title">{{ row.title }}</span>
-                  <span class="row-meta">
-                    <span>{{ row.language }}</span>
-                    @if (row.lesson) {
-                      <span aria-hidden="true">·</span>
-                      <span class="row-lesson">{{ row.lesson }}</span>
-                    }
-                    <span aria-hidden="true">·</span>
-                    <span>{{ row.date }}</span>
-                  </span>
-                </a>
-              </li>
-            }
-          </ul>
+        @if (kashas().length > 0) {
+          <k-kasha-list [kashas]="kashas()" />
         } @else {
           <div class="empty">
             <tui-icon icon="@tui.audio-lines" class="empty-icon" />
@@ -77,31 +60,14 @@
           </div>
         }
       } @else {
-        @if (lessonRows().length > 0) {
-          <ul class="list">
-            @for (row of lessonRows(); track row.id) {
-              <li>
-                <a class="row" [routerLink]="['/lesson', row.id]">
-                  <span class="row-title">{{ row.title }}</span>
-                  @if (row.preview) {
-                    <span class="row-preview">{{ row.preview }}</span>
-                  }
-                  <span class="row-meta">
-                    <span [class.has-kashas]="row.count > 0">{{ t(row.countKey, { count: row.count }) }}</span>
-                    <span aria-hidden="true">·</span>
-                    <span>{{ row.date }}</span>
-                  </span>
-                </a>
-              </li>
-            }
-          </ul>
-        } @else {
+        @if (!hasFolders()) {
           <div class="empty">
-            <tui-icon icon="@tui.folder" class="empty-icon" />
-            <p class="empty-title">{{ t('lessons.empty') }}</p>
+            <tui-icon icon="@tui.folder-tree" class="empty-icon" />
+            <p class="empty-title">{{ t('home.noFolders') }}</p>
             <p class="empty-hint">{{ t('home.noLessonsHint') }}</p>
           </div>
         }
+        <k-folder-list [parentId]="null" />
       }
     }
   </main>

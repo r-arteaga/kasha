@@ -39,7 +39,10 @@ export class SharedAudio {
     this.element.src = url;
     this.element
       .play()
-      .then(() => this.element.pause())
+      // Only the silence is paused: a track loaded meanwhile keeps playing.
+      .then(() => {
+        if (this.element.src === url) this.element.pause();
+      })
       .catch(() => (this.unlocked = false))
       .finally(() => URL.revokeObjectURL(url));
   }

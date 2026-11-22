@@ -4,6 +4,7 @@ import { locate, type Position } from '../domain/timeline';
 import type { Track } from '../track';
 import { PauseToRepeat } from './pause-to-repeat';
 import { PlaybackSpeed } from './playback-speed';
+import { SharedAudio } from './shared-audio';
 
 type PitchAwareAudio = HTMLAudioElement & { webkitPreservesPitch?: boolean };
 
@@ -24,7 +25,9 @@ const END_EPSILON_S = 0.02;
  */
 @Injectable()
 export class KaraokePlayer implements OnDestroy {
-  private readonly audio: PitchAwareAudio = new Audio();
+  private readonly audio: PitchAwareAudio = inject(SharedAudio).element;
+  /** The element outlives the page: its listeners go with the player. */
+  private readonly listening = new AbortController();
   private readonly speed = inject(PlaybackSpeed);
   private readonly pauseSetting = inject(PauseToRepeat);
   private url: string | null = null;
@@ -60,16 +63,25 @@ export class KaraokePlayer implements OnDestroy {
 
   constructor() {
     this.audio.preload = 'auto';
-    this.audio.addEventListener('play', () => {
-      this.playing.set(true);
-      this.followed = this.sentenceAt(this.audio.currentTime);
-      this.follow();
-    });
-    this.audio.addEventListener('pause', () => this.stopFollowing());
-    this.audio.addEventListener('ended', () => {
-      this.stopFollowing();
-      this.sentenceEnded();
-    });
+    const { signal } = this.listening;
+    this.audio.addEventListener(
+      'play',
+      () => {
+        this.playing.set(true);
+        this.followed = this.sentenceAt(this.audio.currentTime);
+        this.follow();
+      },
+      { signal },
+    );
+    this.audio.addEventListener('pause', () => this.stopFollowing(), { signal });
+    this.audio.addEventListener(
+      'ended',
+      () => {
+        this.stopFollowing();
+        this.sentenceEnded();
+      },
+      { signal },
+    );
     // A slower voice keeps its pitch, as a person speaking slowly would (Safari still reads the prefixed name).
     this.audio.preservesPitch = true;
     this.audio.webkitPreservesPitch = true;
@@ -135,6 +147,22 @@ export class KaraokePlayer implements OnDestroy {
     this.play();
   }
 
+  /**
+   * A tap on a word. In the sentence being played it holds the reading there (tapping again goes on); in any other
+   * sentence the reading jumps to that sentence's start.
+   */
+  tapAt(seconds: number): void {
+    const sentences = this.track()?.sentences ?? [];
+    const tapped = locate(sentences, seconds).sentence;
+    const sentence = sentences[tapped];
+    if (!sentence) return;
+    if (tapped === this.position().sentence) {
+      this.toggle();
+      return;
+    }
+    this.playFrom(sentence.start);
+  }
+
   previous(): void {
     const sentences = this.track()?.sentences ?? [];
     const turn = this.turn();
@@ -152,11 +180,15 @@ export class KaraokePlayer implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.listening.abort();
     this.cancelTurn();
     this.stopFollowing();
-    this.audio.pause();
-    this.audio.removeAttribute('src');
-    this.audio.load();
+    // The element is shared: if the next screen's player already loaded its own track, leave it playing.
+    if (!this.url || this.audio.src === this.url) {
+      this.audio.pause();
+      this.audio.removeAttribute('src');
+      this.audio.load();
+    }
     if (this.url) URL.revokeObjectURL(this.url);
   }
 

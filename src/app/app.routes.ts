@@ -1,7 +1,8 @@
 import type { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', loadComponent: () => import('./pages/lessons/lessons-page').then((m) => m.LessonsPage) },
+  { path: '', loadComponent: () => import('./pages/home/home-page').then((m) => m.HomePage) },
+  { path: 'listen', loadComponent: () => import('./pages/listen/listen-page').then((m) => m.ListenPage) },
   {
     path: 'lesson/new',
     loadComponent: () => import('./pages/lesson-edit/lesson-edit-page').then((m) => m.LessonEditPage),

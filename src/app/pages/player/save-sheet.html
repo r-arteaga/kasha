@@ -1,0 +1,61 @@
+<ng-container *transloco="let t">
+  <div class="backdrop" aria-hidden="true" (click)="closed.emit()"></div>
+  <section class="sheet" role="dialog" aria-modal="true" [attr.aria-labelledby]="'save-sheet-title'">
+    <h2 class="title" id="save-sheet-title">{{ t(mode() === 'save' ? 'save.title' : 'save.moveTitle') }}</h2>
+
+    <div class="options" role="radiogroup">
+      <label class="option">
+        <input type="radio" name="lesson" class="radio" [checked]="choice() === ''" (change)="pick('')" />
+        <tui-icon class="option-icon" icon="@tui.audio-lines" />
+        <span class="option-label">{{ t('save.noLesson') }}</span>
+        @if (choice() === '') {
+          <tui-icon class="option-check" icon="@tui.check" />
+        }
+      </label>
+      @for (lesson of lessons(); track lesson.id) {
+        <label class="option">
+          <input type="radio" name="lesson" class="radio" [checked]="choice() === lesson.id" (change)="pick(lesson.id)" />
+          <tui-icon class="option-icon" icon="@tui.folder" />
+          <span class="option-label">{{ lesson.title || t('save.untitled') }}</span>
+          @if (choice() === lesson.id) {
+            <tui-icon class="option-check" icon="@tui.check" />
+          }
+        </label>
+      }
+      <label class="option">
+        <input type="radio" name="lesson" class="radio" [checked]="isNew()" (change)="pick('new')" />
+        <tui-icon class="option-icon" icon="@tui.folder-plus" />
+        <span class="option-label">{{ t('save.newLesson') }}</span>
+        @if (isNew()) {
+          <tui-icon class="option-check" icon="@tui.check" />
+        }
+      </label>
+    </div>
+
+    @if (isNew()) {
+      <input
+        class="name"
+        type="text"
+        enterkeyhint="done"
+        [attr.aria-label]="t('save.newLessonName')"
+        [placeholder]="t('save.newLessonName')"
+        [value]="newTitle()"
+        (input)="name($event)"
+        (keydown.enter)="confirm()"
+      />
+    }
+
+    @if (failed() || createFailed()) {
+      <p tuiNotification appearance="negative" size="s" role="alert">{{ t('save.failed') }}</p>
+    }
+
+    <div class="actions">
+      <button tuiButton type="button" appearance="secondary" size="m" (click)="closed.emit()">
+        {{ t('save.cancel') }}
+      </button>
+      <button tuiButton type="button" size="m" [disabled]="!canConfirm()" (click)="confirm()">
+        {{ t('save.confirm') }}
+      </button>
+    </div>
+  </section>
+</ng-container>

@@ -168,3 +168,57 @@ describe('lesson helpers', () => {
     expect(trimPassage('a   b', { start: 1, end: 4 })).toBeNull();
   });
 });
+
+describe('Library: kashas on their own', () => {
+  let storage: IndexedDbStorage;
+  let library: Library;
+
+  beforeEach(async () => {
+    storage = new IndexedDbStorage(new IDBFactory());
+    library = libraryOn(storage);
+    await library.ready();
+  });
+
+  it('keeps a pasted text as a kasha with no lesson, whole, and finds it again after a new start', async () => {
+    const kasha = await library.saveKasha(track('Guten Morgen. Wie geht es dir?'));
+
+    const later = libraryOn(storage);
+    await later.ready();
+
+    expect(later.kashas()).toEqual([kasha]);
+    expect(kasha.lessonId).toBeUndefined();
+    expect(kasha).toMatchObject({ start: 0, end: 'Guten Morgen. Wie geht es dir?'.length });
+    expect((await later.track(kasha.id))?.audio.size).toBe(3);
+  });
+
+  it('lists every kasha, in a lesson or not, the newest first', async () => {
+    const lesson = await library.saveLesson({ title: 'Café', text: 'Eins. Zwei.' });
+    const inLesson = await library.addKasha(lesson.id, { start: 0, end: 5 }, { ...track('Eins.'), createdAt: 1 });
+    const alone = await library.saveKasha({ ...track('Hallo.'), createdAt: 2 });
+
+    expect(library.kashas().map((k) => k.id)).toEqual([alone.id, inLesson.id]);
+    expect(library.kashasOf(lesson.id).map((k) => k.id)).toEqual([inLesson.id]);
+  });
+
+  it('puts a kasha in a lesson and takes it out again, keeping its audio', async () => {
+    const lesson = await library.saveLesson({ title: 'Café', text: 'Hallo.' });
+    const kasha = await library.saveKasha(track('Hallo.'), undefined);
+
+    await library.moveKasha(kasha.id, lesson.id);
+    const later = libraryOn(storage);
+    await later.ready();
+    expect(later.kashasOf(lesson.id).map((k) => k.id)).toEqual([kasha.id]);
+
+    await later.moveKasha(kasha.id, null);
+    expect(later.kashasOf(lesson.id)).toEqual([]);
+    expect(later.kasha(kasha.id)?.lessonId).toBeUndefined();
+    expect((await later.track(kasha.id))?.audio.size).toBe(3);
+  });
+
+  it('saves a kasha straight into a lesson when she picks one', async () => {
+    const lesson = await library.saveLesson({ title: 'Café', text: 'Hallo.' });
+    const kasha = await library.saveKasha(track('Tschüss.'), lesson.id);
+
+    expect(library.kashasOf(lesson.id).map((k) => k.id)).toEqual([kasha.id]);
+  });
+});

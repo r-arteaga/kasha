@@ -17,7 +17,7 @@ describe('speedLabel', () => {
 
 describe('SPEEDS', () => {
   it('goes from half speed to normal speed, slowest first', () => {
-    expect(SPEEDS).toEqual([0.5, 0.6, 0.7, 0.8, 0.9, 1]);
+    expect(SPEEDS).toEqual([0.5, 1]);
   });
 });
 
@@ -35,9 +35,9 @@ describe('PlaybackSpeed', () => {
   });
 
   it('remembers the chosen speed for the next time the app opens', () => {
-    fresh().set(0.7);
+    fresh().set(0.5);
 
-    expect(fresh().rate()).toBe(0.7);
+    expect(fresh().rate()).toBe(0.5);
   });
 
   it('ignores a speed that is not one of the offered ones', () => {
@@ -58,8 +58,8 @@ describe('PlaybackSpeed', () => {
     });
 
     const speed = fresh();
-    speed.set(0.6);
+    speed.set(0.5);
 
-    expect(speed.rate()).toBe(0.6);
+    expect(speed.rate()).toBe(0.5);
   });
 });

@@ -8,6 +8,8 @@ export interface LibraryStorage {
   /** Deletes the lesson together with the given kashas and their audio, all or nothing. */
   deleteLesson(id: string, kashaIds: readonly string[]): Promise<void>;
   putKasha(kasha: Kasha, audio: Blob): Promise<void>;
+  /** Changes a kasha's data and leaves its audio as it is. */
+  updateKasha(kasha: Kasha): Promise<void>;
   deleteKasha(id: string): Promise<void>;
   loadAudio(kashaId: string): Promise<Blob | null>;
 }
@@ -95,6 +97,13 @@ export class IndexedDbStorage implements LibraryStorage {
     const tx = db.transaction([KASHAS, AUDIO], 'readwrite');
     tx.objectStore(KASHAS).put(kasha);
     tx.objectStore(AUDIO).put(stored, kasha.id);
+    await finished(tx);
+  }
+
+  async updateKasha(kasha: Kasha): Promise<void> {
+    const db = await this.open();
+    const tx = db.transaction(KASHAS, 'readwrite');
+    tx.objectStore(KASHAS).put(kasha);
     await finished(tx);
   }
 

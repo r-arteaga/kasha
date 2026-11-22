@@ -23,6 +23,31 @@
     }
 
     <fieldset class="group">
+      <legend class="group-title">{{ t('settings.voice') }}</legend>
+      <div class="options">
+        @for (option of genders; track option.gender) {
+          <label class="option">
+            <input
+              type="radio"
+              name="voice"
+              class="radio"
+              [value]="option.gender"
+              [checked]="voice.gender() === option.gender"
+              (change)="voice.set(option.gender)"
+            />
+            <span class="option-text">
+              <span class="option-label">{{ t(option.label) }}</span>
+            </span>
+            @if (voice.gender() === option.gender) {
+              <tui-icon class="option-check" icon="@tui.check" />
+            }
+          </label>
+        }
+      </div>
+      <p class="group-hint">{{ t('settings.voiceHint') }}</p>
+    </fieldset>
+
+    <fieldset class="group">
       <legend class="group-title">{{ t('settings.theme') }}</legend>
       <div class="options">
         @for (option of themes; track option.mode) {

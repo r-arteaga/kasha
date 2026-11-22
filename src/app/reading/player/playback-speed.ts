@@ -2,10 +2,12 @@ import { Injectable, signal } from '@angular/core';
 import { readStored, store } from '../../shared/local-storage';
 
 /**
- * Playback speeds offered for shadowing more slowly than the voice. The audio is stretched by the browser with
- * the pitch kept, so the karaoke stays in step (it follows the audio's own clock) and nothing is generated again.
+ * The two speeds: slow, for shadowing behind a voice that is too fast, and normal. The audio is stretched by the
+ * browser with the pitch kept, so the karaoke stays in step (it follows the audio's own clock) and nothing is
+ * generated again.
  */
-export const SPEEDS: readonly number[] = [0.5, 0.6, 0.7, 0.8, 0.9, 1];
+export const SPEEDS: readonly number[] = [0.5, 1];
+export const SLOW = 0.5;
 
 const KEY = 'kalare.speed';
 

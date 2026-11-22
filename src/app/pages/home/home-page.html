@@ -1,0 +1,108 @@
+<ng-container *transloco="let t">
+  <header class="bar">
+    <span class="wordmark">Kasha</span>
+    <a tuiIconButton appearance="flat" size="m" iconStart="@tui.settings" routerLink="/settings" class="settings">
+      {{ t('lessons.settings') }}
+    </a>
+  </header>
+
+  <main class="page">
+    <section class="paste" [attr.aria-label]="t('home.pasteLabel')">
+      <div class="box">
+        <textarea
+          class="text"
+          rows="6"
+          [attr.aria-label]="t('home.pasteLabel')"
+          [placeholder]="t('home.placeholder')"
+          [value]="draft.text()"
+          (input)="edit($event)"
+        ></textarea>
+        @if (canListen()) {
+          <button tuiIconButton type="button" appearance="flat" size="s" iconStart="@tui.x" class="clear" (click)="clear()">
+            {{ t('home.clear') }}
+          </button>
+        }
+      </div>
+      <div class="listen-row">
+        <button
+          tuiButton
+          type="button"
+          size="l"
+          iconStart="@tui.play"
+          class="listen"
+          [disabled]="!canListen()"
+          (click)="listen()"
+        >
+          {{ t('home.listen') }}
+        </button>
+        @if (detected(); as language) {
+          <p class="detected">{{ language }} · {{ t(genderKey()) }}</p>
+        }
+      </div>
+    </section>
+
+    @if (state() === 'failed') {
+      <p tuiNotification appearance="negative" role="alert">{{ t('lessons.loadFailed') }}</p>
+    } @else if (state() === 'ready') {
+      <tui-segmented class="tabs" size="m" [activeItemIndex]="tabIndex()" (activeItemIndexChange)="chooseTab($event)">
+        <button type="button">{{ t('home.tabKashas') }}</button>
+        <button type="button">{{ t('home.tabLessons') }}</button>
+      </tui-segmented>
+
+      @if (tab() === 'kashas') {
+        @if (kashaRows().length > 0) {
+          <ul class="list">
+            @for (row of kashaRows(); track row.id) {
+              <li>
+                <a class="row" [routerLink]="['/kasha', row.id]">
+                  <span class="row-title">{{ row.title }}</span>
+                  <span class="row-meta">
+                    <span>{{ row.language }}</span>
+                    @if (row.lesson) {
+                      <span aria-hidden="true">·</span>
+                      <span class="row-lesson">{{ row.lesson }}</span>
+                    }
+                    <span aria-hidden="true">·</span>
+                    <span>{{ row.date }}</span>
+                  </span>
+                </a>
+              </li>
+            }
+          </ul>
+        } @else {
+          <div class="empty">
+            <tui-icon icon="@tui.audio-lines" class="empty-icon" />
+            <p class="empty-title">{{ t('home.noKashas') }}</p>
+            <p class="empty-hint">{{ t('home.noKashasHint') }}</p>
+          </div>
+        }
+      } @else {
+        @if (lessonRows().length > 0) {
+          <ul class="list">
+            @for (row of lessonRows(); track row.id) {
+              <li>
+                <a class="row" [routerLink]="['/lesson', row.id]">
+                  <span class="row-title">{{ row.title }}</span>
+                  @if (row.preview) {
+                    <span class="row-preview">{{ row.preview }}</span>
+                  }
+                  <span class="row-meta">
+                    <span [class.has-kashas]="row.count > 0">{{ t(row.countKey, { count: row.count }) }}</span>
+                    <span aria-hidden="true">·</span>
+                    <span>{{ row.date }}</span>
+                  </span>
+                </a>
+              </li>
+            }
+          </ul>
+        } @else {
+          <div class="empty">
+            <tui-icon icon="@tui.folder" class="empty-icon" />
+            <p class="empty-title">{{ t('lessons.empty') }}</p>
+            <p class="empty-hint">{{ t('home.noLessonsHint') }}</p>
+          </div>
+        }
+      }
+    }
+  </main>
+</ng-container>

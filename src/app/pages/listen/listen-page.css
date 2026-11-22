@@ -1,0 +1,73 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: calc(env(safe-area-inset-top) + 0.5rem) var(--k-gutter) 0.5rem 0.5rem;
+}
+
+.bar-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  color: var(--k-ink-muted);
+}
+
+.saved {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--k-accent);
+}
+
+.saved-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 24rem;
+  margin: 0 auto;
+  padding: var(--k-gutter);
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.progress {
+  width: 100%;
+}
+
+.status-icon {
+  font-size: 2rem;
+  color: var(--k-ink-muted);
+}
+
+.status-text {
+  margin: 0;
+  line-height: 1.5;
+  color: var(--k-ink-muted);
+}
+
+.status-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}

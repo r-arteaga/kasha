@@ -33,11 +33,14 @@ export class Library {
   private readonly kashasByLesson = computed(() => {
     const groups = new Map<string, Kasha[]>();
     for (const kasha of this.kashaMap().values()) {
-      groups.set(kasha.lessonId, [...(groups.get(kasha.lessonId) ?? []), kasha]);
+      if (kasha.lessonId) groups.set(kasha.lessonId, [...(groups.get(kasha.lessonId) ?? []), kasha]);
     }
     for (const list of groups.values()) list.sort((a, b) => a.start - b.start || a.createdAt - b.createdAt);
     return groups;
   });
+
+  /** Every kasha, in a lesson or not, the newest first: the "Kashas" tab of the home screen. */
+  readonly kashas = computed(() => [...this.kashaMap().values()].sort((a, b) => b.createdAt - a.createdAt));
 
   constructor() {
     this.loaded = this.load();
@@ -98,6 +101,27 @@ export class Library {
     const { audio, ...data } = track;
     const kasha: Kasha = { ...data, lessonId, start: passage.start, end: passage.end };
     await this.storage.putKasha(kasha, audio);
+    this.kashaMap.update((map) => new Map(map).set(kasha.id, kasha));
+    return kasha;
+  }
+
+  /** Keeps a text she pasted and heard, whole, as a kasha of its own or in one of her lessons. */
+  async saveKasha(track: Track, lessonId?: string): Promise<Kasha> {
+    const { audio, ...data } = track;
+    const kasha: Kasha = { ...data, start: 0, end: track.text.length, ...(lessonId ? { lessonId } : {}) };
+    await this.storage.putKasha(kasha, audio);
+    this.kashaMap.update((map) => new Map(map).set(kasha.id, kasha));
+    this.askToPersist();
+    return kasha;
+  }
+
+  /** Puts a kasha in a lesson (or takes it out, with no lesson). Its audio stays as it is. */
+  async moveKasha(id: string, lessonId: string | null): Promise<Kasha | null> {
+    const current = this.kasha(id);
+    if (!current) return null;
+    const { lessonId: _old, ...rest } = current;
+    const kasha: Kasha = lessonId ? { ...rest, lessonId } : rest;
+    await this.storage.updateKasha(kasha);
     this.kashaMap.update((map) => new Map(map).set(kasha.id, kasha));
     return kasha;
   }

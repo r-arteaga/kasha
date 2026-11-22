@@ -90,7 +90,12 @@
     "previous": "Frase anterior",
     "play": "Reproducir",
     "pause": "Pausar",
-    "next": "Frase siguiente"
+    "next": "Frase siguiente",
+    "slow": "Velocidad lenta",
+    "save": "Guardar",
+    "saved": "Guardada",
+    "addToLesson": "Añadir a una lección",
+    "backHome": "Volver"
   },
   "settings": {
     "title": "Ajustes",
@@ -101,10 +106,42 @@
     "themeLight": "Claro",
     "themeDark": "Oscuro",
     "language": "Idioma de la app",
-    "languageHint": "Cambia los menús y los botones. El idioma que practicas se elige en cada texto.",
+    "languageHint": "Cambia los menús y los botones. El idioma del texto se reconoce solo.",
     "app": "App",
     "install": "Instalar Kasha",
     "installHint": "Ábrela desde la pantalla de inicio, a pantalla completa. Así el móvil no borra tus lecciones.",
-    "installDescription": "Añádela a tu pantalla de inicio: se abre a pantalla completa, sin el navegador, y el móvil guarda tus lecciones sin borrarlas."
+    "installDescription": "Añádela a tu pantalla de inicio: se abre a pantalla completa, sin el navegador, y el móvil guarda tus lecciones sin borrarlas.",
+    "voice": "Voz",
+    "voiceFemale": "Mujer",
+    "voiceMale": "Hombre",
+    "voiceHint": "Kasha reconoce el idioma del texto y lo lee con una voz de este tipo."
+  },
+  "home": {
+    "pasteLabel": "Texto para escuchar",
+    "placeholder": "Pega o escribe aquí un texto en el idioma que estudias",
+    "clear": "Borrar el texto",
+    "listen": "Escuchar",
+    "voiceFemale": "voz de mujer",
+    "voiceMale": "voz de hombre",
+    "tabKashas": "Kashas",
+    "tabLessons": "Lecciones",
+    "noKashas": "Aún no has guardado ninguna kasha",
+    "noKashasHint": "Pega un texto arriba, escúchalo y guárdalo para practicarlo cuando quieras.",
+    "noLessonsHint": "Una lección agrupa kashas, como una carpeta. Al guardar una kasha puedes crear una."
+  },
+  "listen": {
+    "back": "Volver",
+    "noVoice": "Todavía no hay voces para el idioma de este texto."
+  },
+  "save": {
+    "title": "Guardar kasha",
+    "moveTitle": "Guardar en una lección",
+    "noLesson": "Sin lección",
+    "newLesson": "Nueva lección",
+    "newLessonName": "Nombre de la lección",
+    "untitled": "Sin título",
+    "cancel": "Cancelar",
+    "confirm": "Guardar",
+    "failed": "No se ha podido guardar. Inténtalo otra vez."
   }
 }

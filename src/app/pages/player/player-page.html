@@ -4,8 +4,25 @@
       <a tuiIconButton appearance="flat" size="m" iconStart="@tui.arrow-left" [routerLink]="back().link">
         {{ t(back().label) }}
       </a>
-      <span class="bar-title">{{ track.title }}</span>
+      <span class="bar-title" [class.confirm]="confirmingDelete()" aria-live="polite">
+        {{ confirmingDelete() ? t('lesson.confirmDelete') : track.title }}
+      </span>
+      <button
+        tuiIconButton
+        type="button"
+        size="m"
+        iconStart="@tui.trash-2"
+        class="delete"
+        [appearance]="confirmingDelete() ? 'primary-destructive' : 'flat'"
+        [disabled]="deleting()"
+        (click)="remove()"
+      >
+        {{ t(confirmingDelete() ? 'lesson.confirmDelete' : 'lesson.deleteKasha') }}
+      </button>
     </header>
+    @if (deleteFailed()) {
+      <p tuiNotification appearance="negative" size="s" role="alert" class="delete-failed">{{ t('save.failed') }}</p>
+    }
 
     <k-player-view [track]="track">
       <button

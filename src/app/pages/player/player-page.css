@@ -29,7 +29,10 @@
 
 .delete {
   flex: none;
-  margin-inline-end: -0.5rem;
+}
+
+.bar k-settings-button {
+  margin-inline-start: 0;
 }
 
 .delete-failed {

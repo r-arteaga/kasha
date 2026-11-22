@@ -142,10 +142,6 @@
   justify-content: flex-end;
 }
 
-.slow {
-  font-variant-numeric: tabular-nums;
-}
-
 .play {
   width: 4rem;
   height: 4rem;

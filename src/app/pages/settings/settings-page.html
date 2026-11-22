@@ -1,6 +1,8 @@
 <ng-container *transloco="let t">
   <header class="bar">
-    <a tuiIconButton appearance="flat" size="m" iconStart="@tui.arrow-left" routerLink="/">{{ t('settings.back') }}</a>
+    <button tuiIconButton type="button" appearance="flat" size="m" iconStart="@tui.arrow-left" (click)="back()">
+      {{ t('settings.back') }}
+    </button>
   </header>
 
   <main class="page">

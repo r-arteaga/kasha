@@ -16,6 +16,7 @@ import { Library } from '../../library/library';
 import { allSentences, pickSentence, type SentenceRange, sentenceSpans, spanOf } from '../../library/sentence-pick';
 import { languageLabel } from '../../reading/tts/voices';
 import { AppLanguage } from '../../settings/app-language';
+import { SettingsButton } from '../shared/settings-button';
 
 type Section = 'text' | 'kashas';
 
@@ -31,7 +32,7 @@ function clock(seconds: number): string {
 @Component({
   selector: 'k-lesson-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, TranslocoDirective, TuiButton, TuiIcon, TuiSegmented],
+  imports: [RouterLink, SettingsButton, TranslocoDirective, TuiButton, TuiIcon, TuiSegmented],
   templateUrl: './lesson-page.html',
   styleUrl: './lesson-page.css',
 })

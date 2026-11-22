@@ -11,6 +11,15 @@
   padding: calc(env(safe-area-inset-top) + 0.5rem) 0.5rem 0.5rem;
 }
 
+/* Edit sits next to the gear on the right. */
+.bar .edit {
+  margin-inline-start: auto;
+}
+
+.bar k-settings-button {
+  margin-inline: 0;
+}
+
 .edit {
   color: var(--k-ink-muted);
 }

@@ -6,6 +6,7 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { TuiButton, TuiInput, TuiLabel, TuiNotification, TuiTextfield } from '@taiga-ui/core';
 import { TuiTextarea } from '@taiga-ui/kit';
 import { Library } from '../../library/library';
+import { SettingsButton } from '../shared/settings-button';
 
 /** How long the delete button waits for the second tap. */
 const CONFIRM_MS = 4000;
@@ -17,6 +18,7 @@ const CONFIRM_MS = 4000;
   imports: [
     ReactiveFormsModule,
     RouterLink,
+    SettingsButton,
     TranslocoDirective,
     TuiButton,
     TuiInput,

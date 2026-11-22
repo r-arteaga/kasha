@@ -13,6 +13,7 @@ import { type FavoriteChoice, favoriteChoices, FavoriteVoices } from '../../read
 import { VoiceCatalog } from '../../reading/tts/voice-catalog';
 import { type Language, languageLabel, type Voice, voiceLabel } from '../../reading/tts/voices';
 import { AppLanguage } from '../../settings/app-language';
+import { SettingsButton } from '../shared/settings-button';
 
 type Problem = 'empty' | 'failed' | null;
 
@@ -32,6 +33,7 @@ function offset(value: string | undefined): number | null {
   imports: [
     ReactiveFormsModule,
     RouterLink,
+    SettingsButton,
     TranslocoDirective,
     TuiButton,
     TuiChevron,

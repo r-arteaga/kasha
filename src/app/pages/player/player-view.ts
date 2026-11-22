@@ -3,9 +3,8 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { TuiButton, TuiIcon } from '@taiga-ui/core';
 import { KaraokePlayer } from '../../reading/player/karaoke-player';
 import { KaraokeText } from '../../reading/player/karaoke-text';
-import { SLOW, speedLabel } from '../../reading/player/playback-speed';
+import { SLOW } from '../../reading/player/playback-speed';
 import type { Track } from '../../reading/track';
-import { AppLanguage } from '../../settings/app-language';
 
 /** From the screen opening to the voice starting, so she can look at the text first. */
 const AUTOPLAY_DELAY_MS = 1000;
@@ -29,7 +28,6 @@ function clock(seconds: number): string {
 })
 export class PlayerView {
   protected readonly player = inject(KaraokePlayer);
-  private readonly appLanguage = inject(AppLanguage);
 
   readonly track = input.required<Track>();
   /** Starts playing by itself a second after the track arrives (when she comes from ▷). */
@@ -38,7 +36,6 @@ export class PlayerView {
   protected readonly elapsed = computed(() => clock(this.player.time()));
   protected readonly total = computed(() => clock(this.track().duration));
   protected readonly slow = computed(() => this.player.rate() === SLOW);
-  protected readonly slowLabel = computed(() => speedLabel(SLOW, this.appLanguage.lang()));
 
   constructor() {
     let timer: ReturnType<typeof setTimeout> | undefined;

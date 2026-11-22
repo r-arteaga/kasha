@@ -12,12 +12,28 @@
 }
 
 .bar-title {
+  flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 0.875rem;
   color: var(--k-ink-muted);
+}
+
+/* The second tap is the one that deletes: the bar says so where the title was. */
+.bar-title.confirm {
+  color: var(--tui-text-negative, #d4380d);
+  font-weight: 600;
+}
+
+.delete {
+  flex: none;
+  margin-inline-end: -0.5rem;
+}
+
+.delete-failed {
+  margin: 0 var(--k-gutter) 0.5rem;
 }
 
 .lesson-button {

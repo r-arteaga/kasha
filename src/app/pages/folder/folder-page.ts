@@ -7,6 +7,7 @@ import { SaveSheet } from '../player/save-sheet';
 import { FolderList } from '../shared/folder-list';
 import { KashaList } from '../shared/kasha-list';
 import { NameSheet } from '../shared/name-sheet';
+import { SettingsButton } from '../shared/settings-button';
 
 /** How long the delete button waits for the second tap that confirms it. */
 const CONFIRM_MS = 4000;
@@ -24,6 +25,7 @@ const CONFIRM_MS = 4000;
     NameSheet,
     RouterLink,
     SaveSheet,
+    SettingsButton,
     TranslocoDirective,
     TuiButton,
     TuiIcon,

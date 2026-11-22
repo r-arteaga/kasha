@@ -16,6 +16,7 @@ import { AppLanguage } from '../../settings/app-language';
 import { PasteDraft } from '../home/paste-draft';
 import { PlayerView } from '../player/player-view';
 import { SaveSheet } from '../player/save-sheet';
+import { SettingsButton } from '../shared/settings-button';
 
 type Stage = 'preparing' | 'ready' | 'noVoice' | 'empty' | 'failed';
 
@@ -29,7 +30,7 @@ const FALLBACK_LANGUAGE = 'en';
 @Component({
   selector: 'k-listen-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PlayerView, RouterLink, SaveSheet, TranslocoDirective, TuiButton, TuiIcon, TuiProgressBar],
+  imports: [PlayerView, RouterLink, SaveSheet, SettingsButton, TranslocoDirective, TuiButton, TuiIcon, TuiProgressBar],
   templateUrl: './listen-page.html',
   styleUrl: './listen-page.css',
 })

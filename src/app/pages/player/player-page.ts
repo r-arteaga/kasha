@@ -14,6 +14,7 @@ import { TuiButton, TuiNotification } from '@taiga-ui/core';
 import { Library } from '../../library/library';
 import { PlayerView } from './player-view';
 import { SaveSheet } from './save-sheet';
+import { SettingsButton } from '../shared/settings-button';
 
 /** How long the delete button waits for the second tap that confirms it. */
 const CONFIRM_MS = 4000;
@@ -22,7 +23,7 @@ const CONFIRM_MS = 4000;
 @Component({
   selector: 'k-player-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PlayerView, RouterLink, SaveSheet, TranslocoDirective, TuiButton, TuiNotification],
+  imports: [PlayerView, RouterLink, SaveSheet, SettingsButton, TranslocoDirective, TuiButton, TuiNotification],
   templateUrl: './player-page.html',
   styleUrl: './player-page.css',
 })

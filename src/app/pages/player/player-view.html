@@ -63,18 +63,17 @@
         {{ t(player.active() ? 'player.pause' : 'player.play') }}
       </button>
       <div class="side end">
+        <!-- Only the snail: Svet, "es un símbolo reconocido de lento". Its name stays for VoiceOver. -->
         <button
-          tuiButton
+          tuiIconButton
           type="button"
-          size="s"
+          size="m"
           iconStart="@tui.snail"
-          class="slow"
           [appearance]="slow() ? 'primary' : 'secondary'"
           [attr.aria-pressed]="slow()"
-          [attr.aria-label]="t('player.slow')"
           (click)="toggleSlow()"
         >
-          {{ slowLabel() }}
+          {{ t('player.slow') }}
         </button>
       </div>
     </div>

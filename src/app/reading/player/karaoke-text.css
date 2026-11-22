@@ -27,6 +27,8 @@
   z-index: 1;
   cursor: pointer;
   border-radius: 0.2em;
+  /* A word split over two lines would stretch the marker into one block covering both (疲|惫). */
+  white-space: nowrap;
 }
 
 .marker {

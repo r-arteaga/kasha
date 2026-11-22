@@ -19,6 +19,7 @@
       >
         {{ t(confirmingDelete() ? 'lesson.confirmDelete' : 'lesson.deleteKasha') }}
       </button>
+      <k-settings-button />
     </header>
     @if (deleteFailed()) {
       <p tuiNotification appearance="negative" size="s" role="alert" class="delete-failed">{{ t('save.failed') }}</p>

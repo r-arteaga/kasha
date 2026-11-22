@@ -1,5 +1,6 @@
+import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { TuiButton, TuiIcon } from '@taiga-ui/core';
 import { DefaultVoice, type VoiceGender } from '../../reading/tts/default-voice';
@@ -18,7 +19,7 @@ interface ThemeOption {
 @Component({
   selector: 'k-settings-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, TranslocoDirective, TuiButton, TuiIcon],
+  imports: [TranslocoDirective, TuiButton, TuiIcon],
   templateUrl: './settings-page.html',
   styleUrl: './settings-page.css',
 })
@@ -28,9 +29,19 @@ export class SettingsPage {
   protected readonly install = inject(InstallApp);
   protected readonly voice = inject(DefaultVoice);
 
+  private readonly location = inject(Location);
+  private readonly router = inject(Router);
+
   constructor() {
     // The guide only lives while Ajustes is open: once in the page it could open by itself on Android.
     inject(DestroyRef).onDestroy(() => void this.install.release());
+  }
+
+  /** Back to the screen she opened Ajustes from; home when Ajustes was the first screen (a link, a reload). */
+  protected back(): void {
+    const navigationId = (this.location.getState() as { navigationId?: number } | null)?.navigationId ?? 1;
+    if (navigationId > 1) this.location.back();
+    else void this.router.navigate(['/']);
   }
 
   protected readonly themes: readonly ThemeOption[] = [

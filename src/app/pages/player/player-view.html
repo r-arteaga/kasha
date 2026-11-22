@@ -1,10 +1,26 @@
 <ng-container *transloco="let t">
+  @if (readingKind() && !allReadings.error()) {
+    <!-- Svet's buttons at the top of "Pantalla II": each shows or hides one layer over the text. -->
+    <div class="layers">
+      <button
+        type="button"
+        class="layer"
+        [class.on]="showReadings.on()"
+        [attr.aria-pressed]="showReadings.on()"
+        (click)="showReadings.toggle()"
+      >
+        <tui-icon [icon]="showReadings.on() ? '@tui.eye' : '@tui.eye-off'" />
+        {{ t(readingKind() === 'pinyin' ? 'player.pinyin' : 'player.romanization') }}
+      </button>
+    </div>
+  }
   <main class="reading">
     <k-karaoke-text
       [sentences]="track().sentences"
       [position]="player.position()"
       [locale]="track().locale"
       [follow]="player.playing()"
+      [readings]="readings()"
       (wordTap)="player.tapAt($event)"
     />
   </main>

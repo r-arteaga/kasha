@@ -1,10 +1,21 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  inject,
+  input,
+  resource,
+} from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { TuiButton, TuiIcon } from '@taiga-ui/core';
 import { KaraokePlayer } from '../../reading/player/karaoke-player';
 import { KaraokeText } from '../../reading/player/karaoke-text';
 import { SLOW } from '../../reading/player/playback-speed';
 import type { Track } from '../../reading/track';
+import { ShowReadings } from '../../reading/transliteration/show-readings';
+import { readingKind, wordReadings } from '../../reading/transliteration/word-readings';
 
 /** From the screen opening to the voice starting, so she can look at the text first. */
 const AUTOPLAY_DELAY_MS = 1000;
@@ -36,6 +47,19 @@ export class PlayerView {
   protected readonly elapsed = computed(() => clock(this.player.time()));
   protected readonly total = computed(() => clock(this.track().duration));
   protected readonly slow = computed(() => this.player.rate() === SLOW);
+
+  protected readonly showReadings = inject(ShowReadings);
+  /** Pinyin for Chinese, romanization for Korean, nothing for languages already in Latin letters. */
+  protected readonly readingKind = computed(() => readingKind(this.track().locale));
+  /** The switch hides too if the converter could not load (offline before the app was cached). */
+  protected readonly allReadings = resource({
+    params: () => (this.readingKind() ? this.track() : undefined),
+    loader: ({ params }) => wordReadings(params.sentences, params.locale),
+  });
+  /** What the text shows over its words: nothing while hidden, loading, or if the converter failed to load. */
+  protected readonly readings = computed(() =>
+    this.showReadings.on() && this.allReadings.hasValue() ? this.allReadings.value() : null,
+  );
 
   constructor() {
     let timer: ReturnType<typeof setTimeout> | undefined;

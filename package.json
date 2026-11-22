@@ -48,7 +48,9 @@
     "@taiga-ui/layout": "~5.33.0",
     "@taiga-ui/polymorpheus": "~5.0.1",
     "@taiga-ui/styles": "~5.33.0",
+    "es-hangul": "2.4.0",
     "msedge-tts": "~2.1.1",
+    "pinyin-pro": "3.29.5",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

@@ -3,7 +3,6 @@ import { Router, RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { TuiButton, TuiIcon, TuiNotification } from '@taiga-ui/core';
 import { TuiSegmented } from '@taiga-ui/kit';
-import { kashaCountKey, previewOf } from '../../library/lesson';
 import { Library } from '../../library/library';
 import { SharedAudio } from '../../reading/player/shared-audio';
 import { DefaultVoice } from '../../reading/tts/default-voice';
@@ -11,16 +10,18 @@ import { detectLanguage } from '../../reading/tts/detect-language';
 import { languageLabel } from '../../reading/tts/voices';
 import { AppLanguage } from '../../settings/app-language';
 import { readStored, store } from '../../shared/local-storage';
+import { FolderList } from '../shared/folder-list';
+import { KashaList } from '../shared/kasha-list';
 import { PasteDraft } from './paste-draft';
 
 type Tab = 'kashas' | 'lessons';
 const TAB_KEY = 'kalare.homeTab';
 
-/** Home: a box to paste a text and hear it at once; below, her saved kashas and her lessons. */
+/** Home: a box to paste a text and hear it at once; below, all her kashas and her tree of folders. */
 @Component({
   selector: 'k-home-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, TranslocoDirective, TuiButton, TuiIcon, TuiNotification, TuiSegmented],
+  imports: [FolderList, KashaList, RouterLink, TranslocoDirective, TuiButton, TuiIcon, TuiNotification, TuiSegmented],
   templateUrl: './home-page.html',
   styleUrl: './home-page.css',
 })
@@ -33,6 +34,8 @@ export class HomePage {
   protected readonly draft = inject(PasteDraft);
 
   protected readonly state = this.library.state;
+  protected readonly kashas = this.library.kashas;
+  protected readonly hasFolders = computed(() => this.library.foldersIn(null).length > 0);
   protected readonly tab = signal<Tab>(readStored<Tab>(TAB_KEY) === 'lessons' ? 'lessons' : 'kashas');
   protected readonly tabIndex = computed(() => (this.tab() === 'kashas' ? 0 : 1));
   protected readonly canListen = computed(() => this.draft.text().trim() !== '');
@@ -43,32 +46,6 @@ export class HomePage {
   });
   protected readonly genderKey = computed(() =>
     this.defaultVoice.gender() === 'Male' ? 'home.voiceMale' : 'home.voiceFemale',
-  );
-
-  private readonly date = computed(
-    () => new Intl.DateTimeFormat(this.appLanguage.lang(), { day: 'numeric', month: 'short' }),
-  );
-  protected readonly kashaRows = computed(() =>
-    this.library.kashas().map((kasha) => ({
-      id: kasha.id,
-      title: kasha.title,
-      language: languageLabel(kasha.locale.split('-')[0], this.appLanguage.lang()),
-      lesson: kasha.lessonId ? (this.library.lesson(kasha.lessonId)?.title ?? null) : null,
-      date: this.date().format(kasha.createdAt),
-    })),
-  );
-  protected readonly lessonRows = computed(() =>
-    this.library.lessons().map((lesson) => {
-      const count = this.library.kashasOf(lesson.id).length;
-      return {
-        id: lesson.id,
-        title: lesson.title,
-        preview: previewOf(lesson),
-        count,
-        countKey: `lessons.${kashaCountKey(count)}`,
-        date: this.date().format(lesson.updatedAt),
-      };
-    }),
   );
 
   protected edit(event: Event): void {

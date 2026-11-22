@@ -79,7 +79,7 @@
     "multilingual": "multilingual"
   },
   "player": {
-    "back": "Back to the lesson",
+    "back": "Back",
     "missingTitle": "This kasha is no longer here",
     "missingText": "You may have deleted it.",
     "toLessons": "Go to lessons",
@@ -94,7 +94,7 @@
     "slow": "Slow speed",
     "save": "Save",
     "saved": "Saved",
-    "addToLesson": "Add to a lesson",
+    "addToLesson": "Keep in a folder",
     "backHome": "Back"
   },
   "settings": {
@@ -127,7 +127,8 @@
     "tabLessons": "Lessons",
     "noKashas": "You haven't saved any kashas yet",
     "noKashasHint": "Paste a text above, listen to it and save it to practise whenever you like.",
-    "noLessonsHint": "A lesson groups kashas, like a folder. You can make one when you save a kasha."
+    "noLessonsHint": "Organise your kashas your way: folders, and folders inside folders.",
+    "noFolders": "You don't have any folders yet"
   },
   "listen": {
     "back": "Back",
@@ -135,13 +136,32 @@
   },
   "save": {
     "title": "Save kasha",
-    "moveTitle": "Keep in a lesson",
-    "noLesson": "No lesson",
-    "newLesson": "New lesson",
-    "newLessonName": "Lesson name",
+    "moveTitle": "Keep in a folder",
+    "noLesson": "No folder",
+    "newLesson": "New folder",
+    "newLessonName": "Folder name",
     "untitled": "Untitled",
     "cancel": "Cancel",
     "confirm": "Save",
-    "failed": "Couldn't save it. Please try again."
+    "failed": "Couldn't save it. Please try again.",
+    "moveFolderTitle": "Move folder",
+    "top": "At the top"
+  },
+  "folder": {
+    "back": "Back",
+    "path": "Where the folder is",
+    "newFolder": "New folder",
+    "newSubfolder": "New folder inside",
+    "create": "Create",
+    "rename": "Rename",
+    "move": "Move",
+    "delete": "Delete",
+    "confirmDelete": "Tap again to delete",
+    "deleteHint": "What's inside isn't deleted: it moves up to the folder above.",
+    "lessonText": "Lesson's text",
+    "emptyHint": "Empty folder. Save kashas here from the player, or make folders inside.",
+    "missingTitle": "This folder is gone",
+    "foldersOne": "1 folder",
+    "foldersMany": "{{ count }} folders"
   }
 }

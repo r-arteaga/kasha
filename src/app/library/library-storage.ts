@@ -5,13 +5,22 @@ import type { Kasha, Lesson } from './lesson';
 export interface LibraryStorage {
   loadAll(): Promise<{ lessons: Lesson[]; kashas: Kasha[] }>;
   putLesson(lesson: Lesson): Promise<void>;
-  /** Deletes the lesson together with the given kashas and their audio, all or nothing. */
-  deleteLesson(id: string, kashaIds: readonly string[]): Promise<void>;
+  /**
+   * Deletes the lesson together with the given kashas and their audio, and writes the folders and kashas that move
+   * out of it, all or nothing.
+   */
+  deleteLesson(id: string, kashaIds: readonly string[], moved?: Moved): Promise<void>;
   putKasha(kasha: Kasha, audio: Blob): Promise<void>;
   /** Changes a kasha's data and leaves its audio as it is. */
   updateKasha(kasha: Kasha): Promise<void>;
   deleteKasha(id: string): Promise<void>;
   loadAudio(kashaId: string): Promise<Blob | null>;
+}
+
+/** What moves out of a deleted folder into the one above it. */
+export interface Moved {
+  lessons?: readonly Lesson[];
+  kashas?: readonly Kasha[];
 }
 
 // Stored names keep their first names (database "kalare", store "karales") so lessons and kashas saved before the renames stay.
@@ -79,10 +88,12 @@ export class IndexedDbStorage implements LibraryStorage {
     await finished(tx);
   }
 
-  async deleteLesson(id: string, kashaIds: readonly string[]): Promise<void> {
+  async deleteLesson(id: string, kashaIds: readonly string[], moved: Moved = {}): Promise<void> {
     const db = await this.open();
     const tx = db.transaction([LESSONS, KASHAS, AUDIO], 'readwrite');
     tx.objectStore(LESSONS).delete(id);
+    for (const lesson of moved.lessons ?? []) tx.objectStore(LESSONS).put(lesson);
+    for (const kasha of moved.kashas ?? []) tx.objectStore(KASHAS).put(kasha);
     for (const kashaId of kashaIds) {
       tx.objectStore(KASHAS).delete(kashaId);
       tx.objectStore(AUDIO).delete(kashaId);

@@ -1,0 +1,98 @@
+<ng-container *transloco="let t">
+  @if (folder(); as folder) {
+    <header class="bar">
+      <a tuiIconButton appearance="flat" size="m" iconStart="@tui.arrow-left" [routerLink]="back()">
+        {{ t('folder.back') }}
+      </a>
+    </header>
+
+    <main class="page">
+      <nav class="path" [attr.aria-label]="t('folder.path')">
+        <a routerLink="/">{{ t('home.tabLessons') }}</a>
+        @for (step of path(); track step.id) {
+          <tui-icon icon="@tui.chevron-right" class="path-sep" />
+          <a [routerLink]="['/folder', step.id]">{{ step.title || t('save.untitled') }}</a>
+        }
+      </nav>
+      <h1 class="title">{{ folder.title || t('save.untitled') }}</h1>
+
+      <div class="actions">
+        <button tuiButton type="button" size="s" appearance="secondary" iconStart="@tui.pencil" (click)="renaming.set(true)">
+          {{ t('folder.rename') }}
+        </button>
+        <button tuiButton type="button" size="s" appearance="secondary" iconStart="@tui.folder-input" (click)="moving.set(true)">
+          {{ t('folder.move') }}
+        </button>
+        <button
+          tuiButton
+          type="button"
+          size="s"
+          appearance="flat-destructive"
+          iconStart="@tui.trash-2"
+          [attr.aria-live]="'polite'"
+          (click)="remove()"
+        >
+          {{ t(confirmingDelete() ? 'folder.confirmDelete' : 'folder.delete') }}
+        </button>
+      </div>
+      @if (confirmingDelete()) {
+        <p class="hint" role="status">{{ t('folder.deleteHint') }}</p>
+      }
+      @if (failed()) {
+        <p tuiNotification appearance="negative" size="s" role="alert">{{ t('save.failed') }}</p>
+      }
+
+      <section class="section">
+        <k-folder-list [parentId]="folder.id" />
+      </section>
+
+      @if (kashas().length > 0) {
+        <section class="section">
+          <h2 class="section-title">{{ t('home.tabKashas') }}</h2>
+          <k-kasha-list [kashas]="kashas()" [showLesson]="false" />
+        </section>
+      }
+
+      @if (hasText()) {
+        <a class="text-row" [routerLink]="['/lesson', folder.id]">
+          <tui-icon icon="@tui.file-text" class="text-icon" />
+          <span class="text-label">{{ t('folder.lessonText') }}</span>
+          <tui-icon icon="@tui.chevron-right" class="text-chevron" />
+        </a>
+      }
+
+      @if (empty()) {
+        <p class="empty-hint">{{ t('folder.emptyHint') }}</p>
+      }
+    </main>
+
+    @if (renaming()) {
+      <k-name-sheet
+        [heading]="t('folder.rename')"
+        [placeholder]="t('save.newLessonName')"
+        [confirmLabel]="t('save.confirm')"
+        [initial]="folder.title"
+        [busy]="busy()"
+        [failed]="failed()"
+        (named)="rename($event)"
+        (closed)="renaming.set(false)"
+      />
+    }
+    @if (moving()) {
+      <k-save-sheet
+        mode="moveFolder"
+        [lessonId]="folder.parentId ?? null"
+        [exclude]="folder.id"
+        [busy]="busy()"
+        [failed]="failed()"
+        (chosen)="move($event)"
+        (closed)="moving.set(false)"
+      />
+    }
+  } @else if (state() !== 'loading') {
+    <main class="missing">
+      <h1 class="missing-title">{{ t('folder.missingTitle') }}</h1>
+      <a tuiButton size="l" routerLink="/">{{ t('player.toLessons') }}</a>
+    </main>
+  }
+</ng-container>

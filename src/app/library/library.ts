@@ -11,6 +11,20 @@ export interface LessonDraft {
   id?: string;
   title: string;
   text: string;
+  /** The folder to put it in (null: at the top). Missing keeps a lesson where it is; a new one goes to the top. */
+  parentId?: string | null;
+}
+
+/** The folder placed inside another one, or at the top of the tree when there is none. */
+function withParent(lesson: Lesson, parentId: string | null | undefined): Lesson {
+  const { parentId: _old, ...rest } = lesson;
+  return parentId ? { ...rest, parentId } : rest;
+}
+
+/** The kasha placed in a lesson, or on its own when there is none. */
+function inLesson(kasha: Kasha, lessonId: string | null | undefined): Kasha {
+  const { lessonId: _old, ...rest } = kasha;
+  return lessonId ? { ...rest, lessonId } : rest;
 }
 
 /**
@@ -55,6 +69,48 @@ export class Library {
     return this.lessonMap().get(id) ?? null;
   }
 
+  /** The folders right inside one (null: the top of the tree), by name. One whose folder is gone counts as top. */
+  foldersIn(parentId: string | null): Lesson[] {
+    const map = this.lessonMap();
+    return [...map.values()]
+      .filter((lesson) => {
+        const top = !lesson.parentId || !map.has(lesson.parentId);
+        return parentId === null ? top : lesson.parentId === parentId;
+      })
+      .sort((a, b) => a.title.localeCompare(b.title) || a.createdAt - b.createdAt);
+  }
+
+  /** The folders above one, from the top down (not the folder itself). */
+  ancestors(id: string): Lesson[] {
+    const path: Lesson[] = [];
+    const seen = new Set([id]);
+    let parentId = this.lesson(id)?.parentId;
+    while (parentId && !seen.has(parentId)) {
+      const parent = this.lesson(parentId);
+      if (!parent) break;
+      path.unshift(parent);
+      seen.add(parentId);
+      parentId = parent.parentId;
+    }
+    return path;
+  }
+
+  /** The folder and every folder inside it, at any depth. */
+  descendants(id: string): Set<string> {
+    const found = new Set([id]);
+    let grew = true;
+    while (grew) {
+      grew = false;
+      for (const lesson of this.lessonMap().values()) {
+        if (lesson.parentId && found.has(lesson.parentId) && !found.has(lesson.id)) {
+          found.add(lesson.id);
+          grew = true;
+        }
+      }
+    }
+    return found;
+  }
+
   /** In the order of the lesson's text. */
   kashasOf(lessonId: string): Kasha[] {
     return this.kashasByLesson().get(lessonId) ?? [];
@@ -68,25 +124,32 @@ export class Library {
     const now = Date.now();
     this.lastStamp = Math.max(now, this.lastStamp + 1, ...this.lessons().map((l) => l.updatedAt + 1));
     const existing = draft.id ? this.lesson(draft.id) : null;
-    const lesson: Lesson = {
-      id: existing?.id ?? newId(),
-      title: draft.title.trim() || titleFrom(draft.text),
-      text: draft.text,
-      createdAt: existing?.createdAt ?? now,
-      updatedAt: this.lastStamp,
-    };
+    const lesson = withParent(
+      {
+        id: existing?.id ?? newId(),
+        title: draft.title.trim() || titleFrom(draft.text),
+        text: draft.text,
+        createdAt: existing?.createdAt ?? now,
+        updatedAt: this.lastStamp,
+      },
+      draft.parentId === undefined ? existing?.parentId : draft.parentId,
+    );
     await this.storage.putLesson(lesson);
     this.lessonMap.update((map) => new Map(map).set(lesson.id, lesson));
     this.askToPersist();
     return lesson;
   }
 
+  /** Deletes a lesson and its kashas; folders inside it move up to the folder it was in. */
   async deleteLesson(id: string): Promise<void> {
     const kashaIds = this.kashasOf(id).map((k) => k.id);
-    await this.storage.deleteLesson(id, kashaIds);
+    const parentId = this.lesson(id)?.parentId;
+    const lessons = this.foldersIn(id).map((folder) => withParent(folder, parentId));
+    await this.storage.deleteLesson(id, kashaIds, { lessons });
     this.lessonMap.update((map) => {
       const next = new Map(map);
       next.delete(id);
+      for (const lesson of lessons) next.set(lesson.id, lesson);
       return next;
     });
     this.kashaMap.update((map) => {
@@ -105,6 +168,35 @@ export class Library {
     return kasha;
   }
 
+  /** Deletes a folder and nothing else: its folders and kashas move up to the folder it was in. */
+  async deleteFolder(id: string): Promise<void> {
+    const parentId = this.lesson(id)?.parentId;
+    const lessons = this.foldersIn(id).map((folder) => withParent(folder, parentId));
+    const kashas = this.kashasOf(id).map((kasha) => inLesson(kasha, parentId));
+    await this.storage.deleteLesson(id, [], { lessons, kashas });
+    this.lessonMap.update((map) => {
+      const next = new Map(map);
+      next.delete(id);
+      for (const lesson of lessons) next.set(lesson.id, lesson);
+      return next;
+    });
+    this.kashaMap.update((map) => {
+      const next = new Map(map);
+      for (const kasha of kashas) next.set(kasha.id, kasha);
+      return next;
+    });
+  }
+
+  /** Puts a folder inside another one (null: at the top). Refuses to put it inside itself or one of its own. */
+  async moveLesson(id: string, parentId: string | null): Promise<Lesson | null> {
+    const current = this.lesson(id);
+    if (!current || (parentId !== null && this.descendants(id).has(parentId))) return null;
+    const lesson = withParent(current, parentId);
+    await this.storage.putLesson(lesson);
+    this.lessonMap.update((map) => new Map(map).set(lesson.id, lesson));
+    return lesson;
+  }
+
   /** Keeps a text she pasted and heard, whole, as a kasha of its own or in one of her lessons. */
   async saveKasha(track: Track, lessonId?: string): Promise<Kasha> {
     const { audio, ...data } = track;
@@ -119,8 +211,7 @@ export class Library {
   async moveKasha(id: string, lessonId: string | null): Promise<Kasha | null> {
     const current = this.kasha(id);
     if (!current) return null;
-    const { lessonId: _old, ...rest } = current;
-    const kasha: Kasha = lessonId ? { ...rest, lessonId } : rest;
+    const kasha = inLesson(current, lessonId);
     await this.storage.updateKasha(kasha);
     this.kashaMap.update((map) => new Map(map).set(kasha.id, kasha));
     return kasha;

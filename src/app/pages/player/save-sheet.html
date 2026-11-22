@@ -1,23 +1,29 @@
 <ng-container *transloco="let t">
   <div class="backdrop" aria-hidden="true" (click)="closed.emit()"></div>
-  <section class="sheet" role="dialog" aria-modal="true" [attr.aria-labelledby]="'save-sheet-title'">
-    <h2 class="title" id="save-sheet-title">{{ t(mode() === 'save' ? 'save.title' : 'save.moveTitle') }}</h2>
+  <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="save-sheet-title">
+    <h2 class="title" id="save-sheet-title">{{ t(title()) }}</h2>
 
     <div class="options" role="radiogroup">
       <label class="option">
         <input type="radio" name="lesson" class="radio" [checked]="choice() === ''" (change)="pick('')" />
-        <tui-icon class="option-icon" icon="@tui.audio-lines" />
-        <span class="option-label">{{ t('save.noLesson') }}</span>
+        <tui-icon class="option-icon" [icon]="mode() === 'moveFolder' ? '@tui.folder-tree' : '@tui.audio-lines'" />
+        <span class="option-label">{{ t(topLabel()) }}</span>
         @if (choice() === '') {
           <tui-icon class="option-check" icon="@tui.check" />
         }
       </label>
-      @for (lesson of lessons(); track lesson.id) {
-        <label class="option">
-          <input type="radio" name="lesson" class="radio" [checked]="choice() === lesson.id" (change)="pick(lesson.id)" />
+      @for (option of options(); track option.folder.id) {
+        <label class="option" [style.padding-inline-start.rem]="1 + option.depth * 1.25">
+          <input
+            type="radio"
+            name="lesson"
+            class="radio"
+            [checked]="choice() === option.folder.id"
+            (change)="pick(option.folder.id)"
+          />
           <tui-icon class="option-icon" icon="@tui.folder" />
-          <span class="option-label">{{ lesson.title || t('save.untitled') }}</span>
-          @if (choice() === lesson.id) {
+          <span class="option-label">{{ option.folder.title || t('save.untitled') }}</span>
+          @if (choice() === option.folder.id) {
             <tui-icon class="option-check" icon="@tui.check" />
           }
         </label>

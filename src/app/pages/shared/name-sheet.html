@@ -1,0 +1,28 @@
+<ng-container *transloco="let t">
+  <div class="backdrop" aria-hidden="true" (click)="closed.emit()"></div>
+  <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="name-sheet-title">
+    <h2 class="title" id="name-sheet-title">{{ heading() }}</h2>
+    <input
+      #field
+      class="name"
+      type="text"
+      enterkeyhint="done"
+      [attr.aria-label]="placeholder()"
+      [placeholder]="placeholder()"
+      [value]="name()"
+      (input)="edit($event)"
+      (keydown.enter)="confirm()"
+    />
+    @if (failed()) {
+      <p tuiNotification appearance="negative" size="s" role="alert">{{ t('save.failed') }}</p>
+    }
+    <div class="actions">
+      <button tuiButton type="button" appearance="secondary" size="m" (click)="closed.emit()">
+        {{ t('save.cancel') }}
+      </button>
+      <button tuiButton type="button" size="m" [disabled]="!canConfirm()" (click)="confirm()">
+        {{ confirmLabel() }}
+      </button>
+    </div>
+  </section>
+</ng-container>

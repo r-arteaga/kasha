@@ -5,6 +5,7 @@ import type { Track } from '../track';
 import { PauseToRepeat } from './pause-to-repeat';
 import { PlaybackSpeed } from './playback-speed';
 import { SharedAudio } from './shared-audio';
+import { clearNowPlaying, showNowPlaying } from './now-playing';
 
 type PitchAwareAudio = HTMLAudioElement & { webkitPreservesPitch?: boolean };
 
@@ -42,6 +43,8 @@ export class KaraokePlayer implements OnDestroy {
   readonly pauseToRepeat = this.pauseSetting.on;
   readonly repeat = signal(false);
   readonly track = signal<Track | null>(null);
+  /** What this player told the phone is playing (Control Center, lock screen). */
+  private nowPlaying: MediaMetadata | null = null;
   readonly playing = signal(false);
   readonly time = signal(0);
   readonly turn = signal<Turn | null>(null);
@@ -113,6 +116,7 @@ export class KaraokePlayer implements OnDestroy {
     this.track.set(track);
     this.time.set(0);
     this.followed = 0;
+    this.nowPlaying = showNowPlaying(track.title);
   }
 
   toggle(): void {
@@ -190,6 +194,7 @@ export class KaraokePlayer implements OnDestroy {
       this.audio.load();
     }
     if (this.url) URL.revokeObjectURL(this.url);
+    clearNowPlaying(this.nowPlaying);
   }
 
   /** Acts on the end of the followed sentence: go on, stop, start it again, or give her a turn first. */

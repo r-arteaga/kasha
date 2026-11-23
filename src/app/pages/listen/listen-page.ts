@@ -8,7 +8,7 @@ import { Library } from '../../library/library';
 import { createTrack, NothingToReadError } from '../../reading/generation/create-track';
 import { SPEECH_SYNTHESIZER } from '../../reading/generation/speech-synthesizer';
 import type { Track } from '../../reading/track';
-import { DefaultVoice, pickVoice } from '../../reading/tts/default-voice';
+import { pickVoice } from '../../reading/tts/default-voice';
 import { detectLanguage } from '../../reading/tts/detect-language';
 import { VoiceCatalog } from '../../reading/tts/voice-catalog';
 import { languageLabel, type Voice } from '../../reading/tts/voices';
@@ -24,7 +24,7 @@ type Stage = 'preparing' | 'ready' | 'noVoice' | 'empty' | 'failed';
 const FALLBACK_LANGUAGE = 'en';
 
 /**
- * The text from the home screen, read aloud: it recognises the language, picks a voice of the kind she prefers,
+ * The text from the home screen, read aloud: it recognises the language, picks a voice of the kind she chose under ▷,
  * makes the audio and starts playing by itself. She can keep it as a kasha. Route `listen`.
  */
 @Component({
@@ -39,7 +39,6 @@ export class ListenPage {
   private readonly catalog = inject(VoiceCatalog);
   private readonly synthesizer = inject(SPEECH_SYNTHESIZER);
   private readonly library = inject(Library);
-  private readonly defaultVoice = inject(DefaultVoice);
   private readonly appLanguage = inject(AppLanguage);
   private readonly router = inject(Router);
 
@@ -80,7 +79,7 @@ export class ListenPage {
     }
     const voices = this.catalog.languages().flatMap((language) => language.voices);
     const language = detectLanguage(text) ?? FALLBACK_LANGUAGE;
-    const voice = pickVoice(voices, language, this.defaultVoice.gender());
+    const voice = pickVoice(voices, language, this.draft.voiceGender());
     if (!voice) {
       this.stage.set('noVoice');
       return;

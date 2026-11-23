@@ -35,8 +35,39 @@
         >
           {{ t('home.listen') }}
         </button>
-        @if (detected(); as language) {
-          <p class="detected">{{ language }} · {{ t(genderKey()) }}</p>
+        @if (languageName(); as name) {
+          <!-- The language as a flag and the kind of voice as two toggles like the snail; her pick is for this text only. -->
+          <div class="voice">
+            @if (flag(); as flag) {
+              <span class="flag" role="img" [attr.aria-label]="name" [title]="name">{{ flag }}</span>
+            } @else {
+              <span class="language">{{ name }}</span>
+            }
+            <div class="kinds" role="group" [attr.aria-label]="t('home.voiceKind')">
+              <button
+                tuiIconButton
+                type="button"
+                size="m"
+                iconStart="@tui.venus"
+                [appearance]="voiceGender() === 'Female' ? 'primary' : 'secondary'"
+                [attr.aria-pressed]="voiceGender() === 'Female'"
+                (click)="chooseVoiceGender('Female')"
+              >
+                {{ t('home.voiceFemale') }}
+              </button>
+              <button
+                tuiIconButton
+                type="button"
+                size="m"
+                iconStart="@tui.mars"
+                [appearance]="voiceGender() === 'Male' ? 'primary' : 'secondary'"
+                [attr.aria-pressed]="voiceGender() === 'Male'"
+                (click)="chooseVoiceGender('Male')"
+              >
+                {{ t('home.voiceMale') }}
+              </button>
+            </div>
+          </div>
         }
       </div>
     </section>

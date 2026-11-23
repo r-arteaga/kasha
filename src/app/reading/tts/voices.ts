@@ -29,6 +29,16 @@ export function voiceLabel(voice: Voice, words: VoiceWords): string {
 
 const languageNames = new Map<string, Intl.DisplayNames>();
 
+/**
+ * The flag of the country a voice comes from ("zh-CN" → 🇨🇳): it shows which Chinese, English or Spanish she will
+ * hear. Null for a locale without a country.
+ */
+export function localeFlag(locale: string): string | null {
+  const region = locale.split('-')[1];
+  if (!region || !/^[A-Z]{2}$/.test(region)) return null;
+  return String.fromCodePoint(...[...region].map((letter) => 0x1f1e6 + letter.charCodeAt(0) - 65));
+}
+
 /** "de-DE" → "Alemán (Alemania)" in Spanish, "German (Germany)" in English; the code when it cannot be named. */
 export function languageLabel(locale: string, appLang: string): string {
   try {

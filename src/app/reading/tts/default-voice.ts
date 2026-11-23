@@ -34,25 +34,33 @@ const MAIN_LOCALE: Record<string, string> = {
   zh: 'zh-CN',
 };
 
+/** Voices Microsoft tags as cartoon voices ("Cartoon", "Cute"): they sound like children, and Svet wants adults. */
+const CHILD_VOICES = new Set(['zh-CN-XiaoyiNeural', 'zh-CN-YunxiaNeural', 'en-US-AnaNeural']);
+
+/** The voice of each kind where a language has several adult ones; elsewhere the first by name. */
+const CHOSEN: Record<string, Partial<Record<VoiceGender, string>>> = {
+  'zh-CN': { Female: 'zh-CN-XiaoxiaoNeural', Male: 'zh-CN-YunyangNeural' },
+};
+
 /**
- * A voice for a language, picked at random among the voices of the kind she prefers, in the language's usual
- * variety. Voices that read many languages are left for last: they sound less native. Null when the language
- * has no voice at all.
+ * The voice a language reads with for the kind she prefers, in the language's usual variety. It is always the
+ * same one, so every kasha of a language sounds alike (Svet: "Siempre será esas 2 voces para el idioma"). Adult
+ * voices only, unless the language has nothing else; voices that read many languages are left for last, as they
+ * sound less native. Null when the language has no voice at all.
  */
-export function pickVoice(
-  voices: readonly Voice[],
-  language: string,
-  gender: VoiceGender,
-  random: () => number = Math.random,
-): Voice | null {
+export function pickVoice(voices: readonly Voice[], language: string, gender: VoiceGender): Voice | null {
   const ofLanguage = voices.filter((voice) => voice.locale.split('-')[0] === language);
   if (ofLanguage.length === 0) return null;
   const main = MAIN_LOCALE[language];
   const locale = ofLanguage.some((voice) => voice.locale === main) ? main : ofLanguage[0].locale;
   const ofLocale = ofLanguage.filter((voice) => voice.locale === locale);
-  const native = ofLocale.filter((voice) => !voice.name.includes('Multilingual'));
-  const pool = native.length > 0 ? native : ofLocale;
-  const ofGender = pool.filter((voice) => voice.gender === gender);
-  const choices = ofGender.length > 0 ? ofGender : pool;
-  return choices[Math.min(choices.length - 1, Math.floor(random() * choices.length))];
+  const adult = preferNonEmpty(ofLocale.filter((voice) => !CHILD_VOICES.has(voice.name)), ofLocale);
+  const pool = preferNonEmpty(adult.filter((voice) => !voice.name.includes('Multilingual')), adult);
+  const choices = preferNonEmpty(pool.filter((voice) => voice.gender === gender), pool);
+  const chosen = CHOSEN[locale]?.[gender];
+  return choices.find((voice) => voice.name === chosen) ?? [...choices].sort((a, b) => a.name.localeCompare(b.name))[0];
+}
+
+function preferNonEmpty(voices: Voice[], fallback: Voice[]): Voice[] {
+  return voices.length > 0 ? voices : fallback;
 }

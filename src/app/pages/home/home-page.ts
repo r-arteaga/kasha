@@ -5,9 +5,10 @@ import { TuiButton, TuiIcon, TuiNotification } from '@taiga-ui/core';
 import { TuiSegmented } from '@taiga-ui/kit';
 import { Library } from '../../library/library';
 import { SharedAudio } from '../../reading/player/shared-audio';
-import { DefaultVoice } from '../../reading/tts/default-voice';
+import { pickVoice, usualLocale, type VoiceGender } from '../../reading/tts/default-voice';
 import { detectLanguage } from '../../reading/tts/detect-language';
-import { languageLabel } from '../../reading/tts/voices';
+import { VoiceCatalog } from '../../reading/tts/voice-catalog';
+import { languageLabel, localeFlag } from '../../reading/tts/voices';
 import { AppLanguage } from '../../settings/app-language';
 import { readStored, store } from '../../shared/local-storage';
 import { FolderList } from '../shared/folder-list';
@@ -30,7 +31,7 @@ export class HomePage {
   private readonly appLanguage = inject(AppLanguage);
   private readonly router = inject(Router);
   private readonly sharedAudio = inject(SharedAudio);
-  private readonly defaultVoice = inject(DefaultVoice);
+  private readonly catalog = inject(VoiceCatalog);
   protected readonly draft = inject(PasteDraft);
 
   protected readonly state = this.library.state;
@@ -39,14 +40,30 @@ export class HomePage {
   protected readonly tab = signal<Tab>(readStored<Tab>(TAB_KEY) === 'lessons' ? 'lessons' : 'kashas');
   protected readonly tabIndex = computed(() => (this.tab() === 'kashas' ? 0 : 1));
   protected readonly canListen = computed(() => this.draft.text().trim() !== '');
-  /** "Chino · voz de mujer": what ▷ will do, so a wrong guess shows before she listens. */
-  protected readonly detected = computed(() => {
-    const language = detectLanguage(this.draft.text());
+  private readonly language = computed(() => detectLanguage(this.draft.text()));
+  /** "Chino": the language she will hear, so a wrong guess shows before she listens. */
+  protected readonly languageName = computed(() => {
+    const language = this.language();
     return language ? languageLabel(language, this.appLanguage.lang()) : null;
   });
-  protected readonly genderKey = computed(() =>
-    this.defaultVoice.gender() === 'Male' ? 'home.voiceMale' : 'home.voiceFemale',
-  );
+  /** 🇨🇳: the country of the voice ▷ will use (the usual one until the voice list has loaded). */
+  protected readonly flag = computed(() => {
+    const language = this.language();
+    if (!language) return null;
+    const voices = this.catalog.languages().flatMap((entry) => entry.voices);
+    const locale = pickVoice(voices, language, this.draft.voiceGender())?.locale ?? usualLocale(language);
+    return locale ? localeFlag(locale) : null;
+  });
+  protected readonly voiceGender = this.draft.voiceGender;
+
+  constructor() {
+    // The list of voices, so the flag is the voice's own; /listen needs it anyway.
+    void this.catalog.load();
+  }
+
+  protected chooseVoiceGender(gender: VoiceGender): void {
+    this.draft.chooseVoiceGender(gender);
+  }
 
   protected edit(event: Event): void {
     this.draft.set((event.target as HTMLTextAreaElement).value);

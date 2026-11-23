@@ -34,6 +34,11 @@ const MAIN_LOCALE: Record<string, string> = {
   zh: 'zh-CN',
 };
 
+/** The variety a language is read in when the voice list is not loaded yet; null for a language not listed here. */
+export function usualLocale(language: string): string | null {
+  return MAIN_LOCALE[language] ?? null;
+}
+
 /** Voices Microsoft tags as cartoon voices ("Cartoon", "Cute"): they sound like children, and Svet wants adults. */
 const CHILD_VOICES = new Set(['zh-CN-XiaoyiNeural', 'zh-CN-YunxiaNeural', 'en-US-AnaNeural']);
 

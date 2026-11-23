@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { groupByLanguage, languageLabel, voiceLabel, type VoiceWords } from './voices';
+import { groupByLanguage, languageLabel, localeFlag, voiceLabel, type VoiceWords } from './voices';
 
 const SPANISH: VoiceWords = { female: 'mujer', male: 'hombre', multilingual: 'multilingüe' };
 const RUSSIAN: VoiceWords = { female: 'женский', male: 'мужской', multilingual: 'многоязычный' };
@@ -76,5 +76,19 @@ describe('groupByLanguage', () => {
       'German (Germany)',
       'Japanese (Japan)',
     ]);
+  });
+});
+
+describe('localeFlag', () => {
+  it('shows the flag of the country the voice comes from', () => {
+    expect(localeFlag('zh-CN')).toBe('🇨🇳');
+    expect(localeFlag('en-US')).toBe('🇺🇸');
+    expect(localeFlag('ko-KR')).toBe('🇰🇷');
+    expect(localeFlag('zh-CN-liaoning')).toBe('🇨🇳');
+  });
+
+  it('has no flag for a locale without a country', () => {
+    expect(localeFlag('fil')).toBeNull();
+    expect(localeFlag('es-419')).toBeNull();
   });
 });

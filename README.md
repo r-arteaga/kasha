@@ -29,66 +29,44 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="license: MIT"></a>
 </p>
 
-Paste a text in the language you're learning, pick a voice, and listen with each word lit up as it's spoken. You repeat right behind it: that's *shadowing*.
+Paste a text in the language you're learning and listen with each word lit up as it's spoken. You repeat right behind it: that's *shadowing*.
 
-| 1 · Save the lesson | 2 · Pick the sentences | 3 · Listen and repeat |
+| 1 · Paste and listen | 2 · Listen and repeat | 3 · Save it |
 |:---:|:---:|:---:|
-| <img src="docs/images/en/lesson.png" width="220" alt="A lesson with its two kashas"> | <img src="docs/images/en/pick-sentences.png" width="220" alt="Two sentences ticked"> | <img src="docs/images/en/player.png" width="220" alt="The player with one word lit up"> |
-| A dialogue, an article, your notes. It stays on your phone like a note. | Tap the sentences you want to practise, or “All”. Pick the voice. | The word being spoken lights up. Each part with its audio is a **kasha**. |
+| <img src="docs/images/en/home.png" width="220" alt="The home screen with a Chinese text pasted in, the Chinese flag and the female and male voice buttons"> | <img src="docs/images/en/player.png" width="220" alt="The player with pinyin over each word and one word lit up"> | <img src="docs/images/en/folders.png" width="220" alt="Two folders with saved kashas"> |
+| Kasha recognises the language by itself. The flag tells you which; ♀ and ♂ pick a female or male voice. | The word being spoken lights up, with its pinyin on top. You repeat it right after. | Each text with its audio is a **kasha**. Save it in a folder and practise whenever you like. |
 
 ## What it already does
 
-- **Speed** from 0.5× to 1×, without the voice dropping in pitch.
+- **Recognises the language** of the text and always reads it with the same voice for that language, female or male. Your usual one is set in Settings, and on the home screen you can switch it for that text only.
+- **Pinyin** over each Chinese word and **romanization** for Korean. One button hides it.
+- **Slower** with the snail button, without the voice dropping in pitch.
 - **Repeat sentence**: the same sentence on a loop until you get it.
 - **Pause to repeat**: after each sentence it goes quiet just long enough for you to say it.
 - **Tap a word** to jump there.
-- **Favourite voices**, so you don't have to look for yours every time.
-- **Installs like an app** (Settings → “Install Kasha”) and opens offline. Making new audio does need the internet.
-- **Everything stays on your phone.** There are no accounts. The text only leaves your phone to be turned into speech, with Microsoft Edge's voices.
-- In **English, Spanish and Russian**, with light and dark themes.
+- **Folders** to sort your kashas, and folders inside folders.
+- **Settings** one tap away from every screen.
+- **Installs like an app** (Settings → "Install Kasha") and opens offline. Making new audio does need the internet.
+- **Your phone shows what's playing** on the lock screen, with the Kasha icon.
+- **Everything stays on your phone.** No accounts. The text only leaves the phone to be turned into speech, with Microsoft Edge's voices.
+- In **Spanish, English and Russian**, with light and dark themes.
 
-## What's next: you choose
+## What's next
 
-These are the ideas we have. Tell us which ones you want and in what order, for example “2, 1 and tweak C”. If something you'd like isn't here, tell us that too.
+- **Translation** under each sentence, with a button to show or hide it.
+- **More reliable pinyin.** Today it gets about 19 syllables in 20 right in hard sentences. It mostly misses neutral tones (学生 is xuésheng, not xuéshēng) and characters whose reading depends on the sentence, like 得 or 地.
 
-The size is a rough guide: the smaller it is, the sooner you get it.
+### Ideas for later
 
-### To practise better
+If you want one of these sooner, tell us.
 
-#### 1 · Record yourself and compare
-On your turn, Kasha records you. Then your sentence plays right after the original, one after the other, so you can hear the difference. It's the heart of shadowing: hearing yourself next to the model.<br>
-**Size:** medium
-
-#### 2 · Practise without looking
-An eye button changes what you see: the whole text, only the first letter of each word (“I h g e K m M”), or nothing. You start by reading and end up following the voice by ear alone.<br>
-**Size:** small
-
-#### 3 · A voice for each character
-If the lesson is a dialogue whose lines start with “A:” and “B:” (or with names), each character speaks with their own voice. And in **role mode** you mute one of them and say their lines yourself: a conversation where it's your turn to talk.<br>
-**Size:** large
-
-#### 4 · Lock screen controls
-Play, pause and change sentence from the lock screen or your headphone buttons, with the phone in your pocket. On iPhone, audio with the app closed has limits set by Apple, so it may not work as smoothly as on Android.<br>
-**Size:** small
-
-#### 5 · Pronunciation check
-You read the sentence aloud and Kasha marks the words it didn't understand. It's the flashiest and the least reliable: it depends on the phone's speech recognition, which struggles with some accents and languages.<br>
-**Size:** large
-
-### So you don't lose anything
-
-#### 6 · Backup
-Right now your lessons live only on your phone: if you delete the app or switch iPhones, they're gone. With this you save them to a file, with their audio, and get them back whenever you want.<br>
-**Size:** medium
-
-### Small tweaks
-
-- **A · Tap a marked part and it plays.** In the “Lesson” tab, the parts that are already kashas take you straight to the player.
-- **B · The usual voice.** When you make another kasha in the same lesson, it suggests the voice you already used there.
-- **C · If the internet drops, it carries on.** If the connection drops halfway through making audio, it picks up the missing sentences instead of starting over.
-- **D · A sample lesson** already there the first time you open the app, to see it working without pasting anything.
-- **E · How many times you've practised it.** A counter and the date of the last time on each kasha.
-- **F · Repeat and move on.** Each sentence plays 2 or 3 times and moves on to the next by itself, without touching anything.
+- **Record yourself and compare.** On your turn Kasha records you, then plays your sentence right after the original so you can hear the difference.
+- **Practise without looking.** A button switches what you see: the whole text, only each word's first letter, or nothing.
+- **One voice per character** in dialogues written with "A:" and "B:". With **role mode** you mute one of them and say their lines yourself.
+- **Lock-screen and headphone buttons**: play, pause and change sentence with the phone in your pocket.
+- **Pronunciation check.** You read the sentence aloud and Kasha marks the words it didn't understand. It depends on the phone's speech recognition, which struggles with some accents.
+- **Backup** of your kashas to a file, audio included, in case you change phones.
+- **Small touches:** if the internet drops halfway through making audio, carry on where it stopped; an example kasha the first time you open the app; how many times you've practised each kasha; and each sentence played 2 or 3 times before moving on by itself.
 
 ---
 
